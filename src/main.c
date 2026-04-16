@@ -448,6 +448,10 @@ void handle_x_event(XEvent *e)
         return;
 
     Panel *panel = get_panel(e->xany.window);
+    if(e->type>=KeyPress && e->type<=LeaveNotify && panel == NULL) {
+        return;
+    }
+
     switch (e->type) {
     case ButtonPress: {
         handle_mouse_press_event(e);
@@ -469,7 +473,7 @@ void handle_x_event(XEvent *e)
             handle_mouse_move_event(e);
 
         Area *area = find_area_under_mouse(panel, e->xmotion.x, e->xmotion.y);
-        if (area->_get_tooltip_text)
+        if (area != NULL && area->_get_tooltip_text)
             tooltip_trigger_show(area, panel, e);
         else
             tooltip_trigger_hide();

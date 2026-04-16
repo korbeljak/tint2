@@ -1,5 +1,5 @@
 project( tint2 )
-cmake_minimum_required( VERSION 2.8.5 )
+cmake_minimum_required( VERSION 3.18 )
 
 option( ENABLE_BATTERY "Enable battery status plugin" ON )
 option( ENABLE_TINT2CONF "Enable tint2conf build, a GTK+3 theme configurator for tint2" ON )
@@ -235,7 +235,7 @@ endif( ENABLE_TINT2CONF )
 
 if( ENABLE_ASAN )
   SET(ASAN_C_FLAGS " -O0 -g3 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic -Wshadow")
-  SET(ASAN_L_FLAGS " -O0 -g3 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic -fuse-ld=gold ")
+  SET(ASAN_L_FLAGS " -O0 -g3 -fsanitize=address -fno-common -fno-omit-frame-pointer -rdynamic")
 else()
   SET(ASAN_C_FLAGS "")
   SET(ASAN_L_FLAGS "")

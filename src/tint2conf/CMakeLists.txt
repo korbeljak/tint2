@@ -1,5 +1,5 @@
 project(tint2conf)
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.18)
 
 include( FindPkgConfig )
 pkg_check_modules( X11_T2C REQUIRED x11 xcomposite xdamage xinerama xrender xrandr>=1.3 )
@@ -74,7 +74,8 @@ target_link_libraries( tint2conf ${X11_T2C_LIBRARIES}
                                  ${IMLIB2_LIBRARIES}
                                  ${GTHREAD2_LIBRARIES}
                                  ${GTK3_LIBRARIES}
-                                 ${RSVG_LIBRARIES} )
+                                 ${RSVG_LIBRARIES}
+                                 m )
 
 add_definitions( -DINSTALL_PREFIX=\"${CMAKE_INSTALL_PREFIX}\" )
 add_definitions( -DLOCALEDIR=\"${CMAKE_INSTALL_FULL_LOCALEDIR}\" )
