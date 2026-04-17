@@ -123,6 +123,7 @@ void expand_exec(DesktopEntry *entry, const char *path)
         }
     endloop:
         *q = '\0';
+        free(exec3);
         free(entry->exec);
         entry->exec = exec2;
     }
