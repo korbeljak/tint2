@@ -809,31 +809,43 @@ Imlib_Image load_image(const char *path, int cached)
                     fprintf(stderr, "tint2: Could not load svg image!: %s", err->message);
                     g_error_free(err);
                 } else {
-                    GdkPixbuf *pixbuf = rsvg_handle_get_pixbuf(svg);
-                    int dim[] = {
-                        gdk_pixbuf_get_width (pixbuf),
-                        gdk_pixbuf_get_height (pixbuf),
-                    };
-                    bool has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
-
-                    // Convert from GdkPixbuf RGBA byte array to DATA32 bitfield
-                    const guint8 *data = gdk_pixbuf_read_pixels (pixbuf);   // Modifying pixbuf internal data
-                    write_data (1, (const char *)dim, sizeof(dim));
-                    if (has_alpha)
-                        for (int i = 0, I = dim[0] * dim[1]; i < I; i++)
-                        {
-                            guint8 *p = (guint8 *)data + i * 4;
-                            *(DATA32 *)p = ((DATA32)p[3] << 24) | ((DATA32)p[0] << 16) | ((DATA32)p[1] << 8) | (DATA32)p[2];
-                        }
+                    GdkPixbuf *pixbuf = rsvg_handle_get_pixbuf_and_error(svg, &err);
+                    if (err != NULL) {
+                        fprintf(stderr, "tint2: Failed to render svg image!: %s\n", err->message);
+                        g_error_free(err);
+                    }
                     else
-                        for (int i = 0, I = dim[0] * dim[1]; i < I; i++)
+                    {
+                        int dim[] = {
+                            gdk_pixbuf_get_width (pixbuf),
+                            gdk_pixbuf_get_height (pixbuf),
+                        };
+                        bool has_alpha = gdk_pixbuf_get_has_alpha (pixbuf);
+
+                        // Convert from GdkPixbuf RGBA byte array to DATA32 bitfield
+                        const guint8 *data = gdk_pixbuf_read_pixels (pixbuf);   // Modifying pixbuf internal data
+                        write_data (1, (const char *)dim, sizeof(dim));
+                        if (has_alpha)
                         {
-                            guint8 *p = (guint8 *)data + i * 4;
-                            *(DATA32 *)p = 0xFF000000 | ((DATA32)p[0] << 16) | ((DATA32)p[1] << 8) | (DATA32)p[2];
+                            for (int i = 0, I = dim[0] * dim[1]; i < I; i++)
+                            {
+                                guint8 *p = (guint8 *)data + i * 4;
+                                *(DATA32 *)p = ((DATA32)p[3] << 24) | ((DATA32)p[0] << 16) | ((DATA32)p[1] << 8) | (DATA32)p[2];
+                            }
                         }
-                    write_data (1, (const char *)data, dim[0] * dim[1] * 4);
-                    g_object_unref( svg);
-                    g_object_unref( pixbuf);
+                        else
+                        {
+                            for (int i = 0, I = dim[0] * dim[1]; i < I; i++)
+                            {
+                                guint8 *p = (guint8 *)data + i * 4;
+                                *(DATA32 *)p = 0xFF000000 | ((DATA32)p[0] << 16) | ((DATA32)p[1] << 8) | (DATA32)p[2];
+                            }
+                        }
+
+                        write_data (1, (const char *)data, dim[0] * dim[1] * 4);
+                        g_object_unref(svg);
+                        g_object_unref(pixbuf);
+                    }
                 }
                 _exit(0);
             } else {

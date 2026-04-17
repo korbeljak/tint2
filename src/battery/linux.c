@@ -567,7 +567,7 @@ char *battery_os_tooltip()
     }
 
     result = tooltip->str;
-    g_string_free(tooltip, FALSE);
+    g_string_free(tooltip, TRUE);
 
     return result;
 }

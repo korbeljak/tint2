@@ -594,6 +594,10 @@ gboolean resize_panel(void *obj)
                         }
                         break;
                     }
+
+                    case ALIGN_LEFT:
+                    default:
+                            break;
                 }
             } else
                 // No tasks => expand the first visible taskbar

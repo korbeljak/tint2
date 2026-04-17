@@ -674,16 +674,29 @@ void execp_action(void *obj, int button, int x, int y, Time time)
 {
     Execp *execp = obj;
     ExecpBackend * backend = execp->backend;
-    
+
     char *command = NULL;
     int cmd_sink = -1;
-    switch (button) {
-        BUTTON_CASE(1, backend->lclick_command);
-        BUTTON_CASE(2, backend->mclick_command);
-        BUTTON_CASE(3, backend->rclick_command);
-        BUTTON_CASE(4, backend->uwheel_command);
-        BUTTON_CASE(5, backend->dwheel_command);
+    if (button >= 1 && button <= 5) {
+        char* cmds[] = {
+            clock_lclick_command, // 1
+            clock_mclick_command, // 2
+            clock_rclick_command, // 3
+            clock_uwheel_command, // 4
+            clock_dwheel_command // 5
+        };
+        int sinks[] = {
+            backend->lclick_command_sink, // 1
+            backend->mclick_command_sink, // 2
+            backend->rclick_command_sink, // 3
+            backend->uwheel_command_sink, // 4
+            backend->dwheel_command_sink // 5
+        };
+
+        command = cmds[button-1];
+        cmd_sink = sinks[button-1];
     }
+    
     if (command) {
         switch (cmd_sink) {
         case -1:setenvd("EXECP_X", x);

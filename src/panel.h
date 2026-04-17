@@ -234,11 +234,6 @@ void save_screenshot(const char *path);
 void save_panel_screenshot(const Panel *panel, const char *path);
 
 /// Helper shortcut macroses
-
-#define BUTTON_CASE(i,c) case i:    command = c;                                         \
-                                    cmd_sink = c ## _sink;                               \
-                                    break
-
 #define lower_if_bottom(p)                                                               \
 if (panel_layer == BOTTOM_LAYER)                                                         \
     XLowerWindow(server.display, (p)->main_win);

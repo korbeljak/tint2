@@ -561,19 +561,21 @@ void button_dump_geometry(void *obj, int indent)
             backend->text);
 }
 
-void button_action(void *obj, int mouse_button, int x, int y, Time time)
+void button_action(void *obj, int button, int x, int y, Time time)
 {
     ButtonBackend *backend = ((Button *)obj)->backend;
-    char *command = NULL;
-    int cmd_sink = -1;
-    switch (mouse_button) {
-        BUTTON_CASE(1, backend->lclick_command);
-        BUTTON_CASE(2, backend->mclick_command);
-        BUTTON_CASE(3, backend->rclick_command);
-        BUTTON_CASE(4, backend->uwheel_command);
-        BUTTON_CASE(5, backend->dwheel_command);
+
+    if (button >= 1 && button <= 5) {
+
+        char* cmds[] = {
+            backend->lclick_command, // 1
+            backend->mclick_command, // 2
+            backend->rclick_command, // 3
+            backend->uwheel_command, // 4
+            backend->dwheel_command // 5
+        };
+        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, FALSE, TRUE);
     }
-    tint_exec(command, NULL, NULL, time, obj, x, y, FALSE, TRUE);
 }
 
 char *button_get_tooltip(void *obj)

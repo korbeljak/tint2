@@ -316,14 +316,14 @@ char *clock_get_tooltip(void *obj)
 
 void clock_action(void *obj, int button, int x, int y, Time time)
 {
-    char *command = NULL;
-    int cmd_sink = -1;
-    switch (button) {
-        BUTTON_CASE (1, clock_lclick_command);
-        BUTTON_CASE (2, clock_mclick_command);
-        BUTTON_CASE (3, clock_rclick_command);
-        BUTTON_CASE (4, clock_uwheel_command);
-        BUTTON_CASE (5, clock_dwheel_command);
+    if (button >= 1 && button <= 5) {
+        char* cmds[] = {
+            clock_lclick_command, // 1
+            clock_mclick_command, // 2
+            clock_rclick_command, // 3
+            clock_uwheel_command, // 4
+            clock_dwheel_command // 5
+        };
+        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, FALSE, TRUE);
     }
-    tint_exec(command, NULL, NULL, time, obj, x, y, FALSE, TRUE);
 }
