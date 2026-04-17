@@ -47,6 +47,7 @@ int parse_dektop_line(char *line, char **key, char **value)
     return 1;
 }
 
+
 void expand_exec(DesktopEntry *entry, const char *path)
 {
     // Expand % in exec
@@ -58,6 +59,8 @@ void expand_exec(DesktopEntry *entry, const char *path)
                         + (entry->name ? strlen(entry->name) : 1)
                         + (entry->icon ? strlen(entry->icon) : 1) + 100;
         char *exec2 = calloc(buf_size, 1);
+        size_t written = 0;
+        char *pE = calloc(buf_size, 1);
         char *p, *q;
         // p will never point to an escaped char
         for (p = entry->exec, q = exec2; *p; p++, q++)
@@ -77,26 +80,31 @@ void expand_exec(DesktopEntry *entry, const char *path)
                 p++;
                 switch (*p) {
                 case 'i':   if (entry->icon) {
-                                snprintf(q, buf_size-1, "--icon '%s'", entry->icon);
-                                char *old = q;
-                                q += strlen_const("--icon ''");
-                                q += strlen(entry->icon);
-                                buf_size -= (size_t)(q - old);
+                                written = snprintf(pE, buf_size-1, "--icon '%s'", entry->icon);
+                                if (written < buf_size)
+                                {
+                                    memcpy(q, pE, written);
+                                    q += written;
+                                    buf_size -= written;
+                                }
+                                else
+                                {
+                                    abort();
+                                }
                             }
                             break;
-                case 'c':   if (entry->name) {
-                                snprintf(q, buf_size-1, "'%s'", entry->name);
-                                char *old = q;
-                                q += strlen_const("''");
-                                q += strlen(entry->name);
-                                buf_size -= (size_t)(q - old);
-                            } else {
-                                snprintf(q, buf_size-1, "'%s'", path);
-                                char *old = q;
-                                q += strlen_const("''");
-                                q += strlen(path);
-                                buf_size -= (size_t)(q - old);
-                            }
+                case 'c':   
+                                written = snprintf(pE, buf_size-1, "'%s'", entry->name ? entry->name : path);
+                                if (written < buf_size)
+                                {
+                                    memcpy(q, pE, written);
+                                    q += written;
+                                    buf_size -= written;
+                                }
+                                else
+                                {
+                                    abort();
+                                }
                             break;
                 case 'F':
                 case 'f':   if (buf_size >= 2) {
