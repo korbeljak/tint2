@@ -538,11 +538,24 @@ void handle_x_event(XEvent *e)
         }
         if (e->xany.window == g_tooltip.window || !systray_enabled)
             break;
-        for (GSList *it = systray.list_icons; it; it = it->next)
+
+        bool wasRemoved;
+        do
         {
-            if (((TrayWindow *)it->data)->win == e->xany.window)
-                systray_destroy_event(it->data);
-        }
+            wasRemoved = false;
+            for (GSList *it = systray.list_icons; it; it = it->next)
+            {
+                TrayWindow* tw = (TrayWindow*)it->data;
+                wasRemoved = tw->win == e->xany.window;
+                if (wasRemoved)
+                {
+                    // The following call changes systray.list_icons.
+                    // It can even become NULL and SEGFAULT.
+                    systray_destroy_event(it->data);
+                    break;
+                }
+            }
+        } while (wasRemoved);
         break;
 
     case ClientMessage: {
