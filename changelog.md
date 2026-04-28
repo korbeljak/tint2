@@ -1,11 +1,25 @@
+2026-04-25 Master
+
+- Doc:
+  - README.md update
+- Fixes:
+  - CMake update
+  - Fixed snprintf crashes
+  - Fixed last item in systray crash
+
 2022-03-25 Master
+
 - Fixes:
   - Fixed ill optimization in mouse_over handler
   - Small enhancements, hinted by cppcheck
+
 2022-03-24 17.1.3
+
 - Fixes:
   - Activated task had chance to lose activation if it's on other desktop, with multi-desktop taskbar
+
 2022-03-24 17.1.2
+
 - Fixes:
   - Fixed multi-taskbar size distrubution (border width was not counted)
   - Scale was not counted sometimes
@@ -13,7 +27,9 @@
   - Regression: segmentation fault with linear gradients
 - Maintainance:
   - Updated russian translation
+
 2022-03-22 17.1.1
+
 - Enhancments:
   - Report XShm status on start
   - Prints X11 errors when they occur
@@ -34,7 +50,9 @@
   - Environment variables are loaded only if properly set (empty value
   disables related option)
   - Failed to build with enabled backtrace on signal
+
 2022-02-23 17.1
+
 - Enhancements:
   - Added option "rounded_corners" to disable rounding for separate corners
   - Added option to use continuous executor process as command sink for its own action commands
@@ -52,7 +70,9 @@
   - tint2conf
     - Colors had channel values decremented when saved to config and used wrong required precision
     - Background image in the editor looked different than on the panel
+
 2022-02-10 17.0.3
+
 - Enhancements:
   - Added command to refresh executors (issue #747) (Arash Rohani)
   - Tooltip: live update, remove truncation by hardcoded value, don't wrap multiline text
@@ -76,13 +96,19 @@
   - tint2conf: Much faster editor start due to optimized themes loading (bug #792)
 - Maintainance:
   - Adopted https://gitlab.com/o9000/tint2 after end-of-life announce
+
 2021-12-04 17.0.2
+
 - Fixes:
   - On dual monitor, when minimizing Chrome window it minimizes on the wrong monitor panel (issue #818)
+
 2021-05-29 17.0.1
+
 - Fixes:
   - Crash on panel cleanup in single-monitor execp (issue #801)
+
 2021-04-18 17.0
+
 - Fixes:
   - Crash when a window icon is large (issue #786) (santouits)
   - Minute clock doesn't update (issue #786)
@@ -94,7 +120,9 @@
   - Port tint2conf to gtk3 (issue #380)
   - execp_monitor config (issue #799)
   - Improved executor examples (Nikita Zlobin)
+
 2019-07-14 16.7
+
 - Fixes:
   - Fix spacing around icons in executor without text in vertical panels (issue #716)
   - Fix Bug: Clock Only Updates Every Minute With Format %s (issue #724)
@@ -106,28 +134,34 @@
   - Expand leading ~ in icon paths
 
 2018-08-05 16.6.1
+
 - Fix packaging regression for debian (issue #715)
 
 2018-08-04 16.6
+
 - Fix regression in task icon brightness (issue #714)
 
 2018-08-04 16.5
+
 - Add new build script
 - Add option to sort taskbar by application name
 - Fix regression in image loading
 
 2018-05-03 16.4
+
 - Update AUTHORS
 - Fixes:
   - Fix leak in image loading (issue #704)
   - Executors no longer log unless env var DEBUG_EXECUTORS is set
 
 2018-04-17 16.3
+
 - Fixes:
   - Layout in executor (issue #695)
   - Other small issues
 
 2018-01-21 16.2
+
 - Fixes:
   - Proper fix for issue #688
   - Fix bad word wrapping (issue #693)
@@ -135,6 +169,7 @@
   - Preliminary high DPI support
 
 2017-12-30 16.1
+
 - Fixes:
   - Fixed several use-after-free errors in the timer code
   - Merged patches and fixed other warnings on OpenBSD
@@ -142,6 +177,7 @@
     to avoid wrapping due to rounding errors
 
 2017-12-20 16.0
+
 - Fixes:
   - Taskbar: `taskbar_distribute_size = 1` now playes well with `task_align = center` and
     `task_align = right` (issue #688)
@@ -153,21 +189,25 @@
   - Use C11 if possible to support generic printing for unit tests (should fall back to C99)
 
 2017-11-05 15.3
+
 - Fixes:
   - Launcher: Reset signal mask before executing commands (issue #674)
   - cmake: Do not hardcode path to /etc
 
 2017-10-01 15.2
+
 - Fixes:
   - Battery info is now again displayed even when current sensor is missing (https://github.com/jmc-88/tint3/issues/34)
   - Text elements compute their size correctly (issue #671)
   - Window order persists on panel restart (issue #615)
 
 2017-09-08 15.1
+
 - Fixes:
   - Fixed build on non-Linux and non-x86 systems
 
 2017-09-02 15.0
+
 - Fixes:
   - Clock, executors and other timers fire correctly after waking up from suspend
   - One-shot timers are restarted correctly from their own callbacks
@@ -212,6 +252,7 @@
     - 0.14.6 will be followed by 15.0.
 
 2017-06-11 0.14.6
+
 - Fixes:
   - Take into account border width when computing text height
   - Taskbar: Fix task icon size limits
@@ -221,38 +262,46 @@
     This is useful for preserving config options and environment when updating tint2.
 
 2017-05-21 0.14.5
+
 - Fixes:
   - Fixed a couple of memory leaks
 
 2017-04-29 0.14.4
+
 - Fixes:
   - Fix regression in executor (issue #639)
   - Fix crash when _NET_WM_ICON is set but empty (https://github.com/jmc-88/tint3/issues/21)
 
 2017-04-23 0.14.3
+
 - Fixes:
   - Make versioning more robust when building as package
 - Enhancements:
   - Tint2conf: Open current tint2 config automatically when started from tint2
 
 2017-03-26 0.14.1
+
 - Fixes:
   - Fixed tint2conf problem under FreeBSD (or generally any system using clang).
 
 2017-03-26 0.14
+
 - Enhancements:
   - New plugin: button.
 
 2017-03-25 0.13.3
+
 - Fixes:
   - Fixed autohide for non-bottom panels (issue #632)
   - Translations updated (contributed by Vladimir)
 
 2017-03-19 0.13.2
+
 - Fixes:
   - Fixed compilation under FreeBSD
 
 2017-03-12 0.13.1
+
 - Fixes:
   - Fixed compilation with new glibc (issue #625)
   - Fixed regression in distributing size between taskbars (issue #628)
@@ -262,6 +311,7 @@
   - Tint2conf: minor improvements
 
 2017-03-04 0.13
+
 - Fixes:
   - Ignore monitors with size 0, fixing crash (issue #618)
   - Battery: support Asus Chromebook Flip C100PA (issue #616)
@@ -277,6 +327,7 @@
 - New plugin: separator (contributed by Oskari Rauta)
 
 2016-08-02 0.12.12
+
 - Fixes:
   - Set task maximum height equal to width if not specified, instead of hardcoding 30 (issue #583; thanks @VastOne)
   - tint2conf
@@ -288,6 +339,7 @@
   - The geometry of panel items is printed to stderr if the environment variable DEBUG_GEOMETRY is set
 
 2016-05-14 0.12.11
+
 - Fixes:
   - tint2conf:
     - Fixed crash in tint2conf when adding background
@@ -295,6 +347,7 @@
     - Changed main window title in tint2conf
 
 2016-05-07 0.12.10
+
 - Fixes:
   - Fixed crash in systray with non-Latin languagess (thanks zcodes)
   - Invalidate cached pixmaps on resize/move (issue #576)
@@ -302,6 +355,7 @@
   - Proper workaround for issue #555
 
 2016-04-02 0.12.9
+
 - Fixes:
   - Regression: Do not detect empty areas as clickable (issue #572)
   - Regression: Position and resize task icon correctly (issue #575)
@@ -309,6 +363,7 @@
   - Battery: lower sample frequency when there is no support for reading current/power
 
 2016-03-25 0.12.8
+
 - Major changes (see details below):
   - Icon cache and lazy icon theme loading to improve performance in tint2 and tint2conf
   - Extra tint2rc themes are installed to /usr/share/tint2 and available in tint2conf
@@ -347,12 +402,14 @@
     - Updated ru translation (thanks @Vladimir-csp)
 
 2016-01-29 0.12.7
+
 - Fixes:
   - Fix crash caused by race when reading inconsistent values for _NET_CURRENT_DESKTOP and _NET_NUMBER_OF_DESKTOPS
   - Fix regression (all desktop tasks not working)
   - Fix small memory leak in launcher
 
 2016-01-25 0.12.6
+
 - Fixes:
   - Fix crash on 32-bit systems (issue #546)
   - Fix compilation on Slackware (issue #547)
@@ -361,10 +418,12 @@
   - Executor now sends click coordinates via environment variables (issue #544)
 
 2016-01-24 0.12.5
+
 - Fixes:
   - Fix rendering corruption triggered occasionally when the compositor is disabled (regression in 0.12.4)
 
 2016-01-23 0.12.4
+
 - Enhancements:
   - Support for NETWM viewports (as used by Compiz or Unity) (issue #94)
   - The default desktop font (Gtk/FontName from XSettings) is used when a font is not specified in the config file
@@ -397,6 +456,7 @@
   - libexecinfo on the *BSDs (only if the cmake flag ENABLE_BACKTRACE is set)
 
 2015-11-12 0.12.3
+
 - Enhancements:
   - Battery: Multiple batteries are now supported under Linux (issue #139;
     thanks to Sebastian Reichel)
@@ -417,6 +477,7 @@
   - The font setting for the desktop name is no longer lost on tint2 restart
 
 2015-08-11 0.12.2
+
 - Fixes:
   - Systray: do not move empty icons to the side, as it breaks GTK2 StatusIcon blinking (issue #515)
   - tint2conf: Fix read of panel_monitor (issue #520)
@@ -424,6 +485,7 @@
   - Fix battery option parsing
 
 2015-08-01 0.12.1
+
 - Fixes:
   - Config:
 	- Read config correctly when panel_items is at the end of the config file (issue #511)
@@ -441,6 +503,7 @@
   - Battery mouse actions and clock middle click and wheel actions (thanks to Jeff Blake)
 
 2015-07-12 0.12
+
 - Note: the changes listed here are based on the previous release tint2 0.11, however some distributions (e.g. Debian)
   offered packages using newer commits and/or patches; thus from the user's perspective some of these features are
   already present. They are marked with '(already released by distros)'.
@@ -531,29 +594,37 @@
   - modified timer code to prevent some rare double-frees or duplicate timers.
 
 2010-06-26
+
 - unhide tint2 panel when dragging something
 - battery FreeBSD uses the new ACPI API (thx to yamagi.burmeister)
 
 2010-06-16
+
 - Set _NET_WM_ICON_GEOMETRY for every task
 
 2010-06-12
+
 - strut_policy=minimum is possible even if autohide is disabled
 
 2010-06-11
+
 - Added icons and a *.desktop file for tint2conf
 - BSD fixes 
 
 2010-06-09
+
 - Add cmake build system
 
 2010-06-08
+
 - Xrandr and Nvidia problems fixed
 
 2010-05-17
+
 - Fix installation of examples
 
 2010-05-15
+
 - added panel theme switcher 'tint2conf'
   with preview of each theme based on current config (size of monitor, task opened, ...)
 - include tintwizard : theme editor
@@ -565,12 +636,14 @@
 
 
 2010-01-28
+
 - Battery hide option
 - bugfixes in task redrawing
 - traywindow and autohide bugfix
 
 
 2010-01-13
+
 - calculate right struts for multiple monitors
 - New timer implementation (works for *BSD too)
 - Changed behaviour for forwarding clicks to the window manager
@@ -586,6 +659,7 @@
 
 
 2009-12-16
+
 - Scrolling through tasks by schattenprinz (added action next_task and prev_task)
 - Andreas : *add* setting tooltip on clock with 'clock_tooltip = format'
 - Andreas : *add* changed everything to kernel timer for easier integration with new timer
@@ -609,79 +683,102 @@
 - Andreas : added possibility to put tint2 into the windowmanagers dock
 
 2009-09-08
+
 - Drag n drop over Task bring Focus by Andreas.Fink85
 
 2009-09-07
+
 - fixed issue 117 : support skip_taskbar by Andreas.Fink85
 - cleanup : switch space to tab
 
 2009-09-01
+
 - fixed segfault
 
 2009-08-30
+
 - detect pid of process owning the systray
 
 2009-08-30
+
 - added taskbar_active_background_id to change current desktop background.
   warning : this feature have a price on cpu (tint2 redraw all task) when you switch desktop.
   comment out taskbar_active_background_id if you don't want it.
 
 2009-08-30
+
 - fixed issue 130 by maato
   ordered systray icon with config "systray_sort = asc/desc"
 
 2009-08-29
+
 - fixed issue 134
 
 2009-08-29
+
 - cleanup and add desktop_right/desktop_left action on task (by jackp)
 
 2009-08-29
+
 - adjust saturation/brightness on task icon
 
 2009-08-29
+
 - merge change described in issue 122 (by jackp)
   made right click easier
 
 2009-08-28
+
 - add some HSB config
 
 2009-08-09
+
 - add mouse action : maximize_restore
 - fixed issue 125
 
 2009-07-28
+
 - some tint2conf code
 
 2009-07-26
+
 - fixed icon on 64 bit system by benjaminfranzke
 
 2009-07-19
+
 - fixed systray crash by mart1987
 
 2009-07-14
+
 - play with some tint2conf code
 
 2009-07-04
+
 - fixed 'defunct' process after fork
 
-----------------------------------------------------------------
+---
+
 2009-06-30  thilor77 <lorthiois@bbsoft.fr>
-released tint-0.7
+
+- released tint-0.7
 
 2009-06-29
+
 - fixed bug when active window draged to another desktop
 
 2009-06-29
+
 - fixed issue 110 and issue 107
 
 2009-06-25
+
 - improve user's message when compiled with --disable-battery
 - replace 'task_width = width' by 'task_maximum_size = width height'
   width will be used in horizontal panel
   height will be used in vertical panel
 
 2009-06-24
+
 - vertical panel done
   user's parameters :
   1) add 'vertical' to panel_position (panel_position = center left vertical)
@@ -692,52 +789,67 @@ released tint-0.7
   so user's change between horizontal and vertical are minimised.
 
 2009-06-23
+
 - play with vertical panel
   check sample file tintrc05 and tintrc06
   more change to come...
 
 2009-06-21
+
 - play with some code for vertical panel
 
 2009-06-20
+
 - remove flickering on systray
 
 2009-06-20
+
 - 'urgent_nb_of_blink' allow to choose the number of blink
 
 2009-06-19
+
 - change systray code. fixed issue 91.
 
 2009-06-18
+
 - patch by Christian Ruppert, configure option for battery
 
 2009-06-14
+
 - revert r78, fixed issue 100
 
 2009-06-13
+
 - fixed background refresh on systray
 
 2009-06-09
+
 - fixed issue 98
 
 2009-06-08
+
 - fixed issue 97 and issue 95
 
 2009-06-08
+
 - allow 'taskbar_mode = multi_desktop' config with 'panel_monitor = all'
 
 2009-06-07
+
 - merge autotool build system by Christian Ruppert
 
 2009-06-06
+
 - fixed issue 56 : with windowmaker
   bug in windowmaker : send unecessary 'desktop changed' each time focus changed
 
 2009-06-06
+
 - add 'wm_menu' config option to disable window manager's menu
   if you don't specify "wm_menu = ", the default value will show WM menu.
 
 2009-06-06
+
 - fixed issue 90 and issue 81 : window manager's menu in panel padding
   works on openbox, pekwm, fluxbox, icewm.
   doesn't work on xfce, windowmaker ?
@@ -745,78 +857,99 @@ released tint-0.7
   and on top/bottom panel padding.
 
 2009-06-05
+
 - fixed issue 46 and 59 : urgent task
   limitation : just one urgent task at a time
 
 2009-06-04
+
 - patch by dmitry.medvinsky : right/left clic command
 
 2009-06-02
+
 - Systray Temp_Fix from keshto
   not yet perfect, but a first step
 
 2009-05-31
+
 - fixed issue 71 : time format %T %r
 
 2009-05-31
+
 - fixed issue 86 : padding bug
 
 2009-05-31
+
 - fixed issue 87 and 88 : battery detection
 
 2009-05-26
+
 - fixed memory leak and battery detection
 
 2009-05-20
+
 - merge patch from yarin.kaul (fixed issue 52)
 
 2009-05-15
+
 - merge battery applet from Sebastian Reichel <elektranox@gmail.com>
 
 2009-03-14
+
 - add systray option when convert tint-0.6 config file
   but you need to stop other systemtray program
 
 2009-03-07
+
 - fixed segfault when time1_format empty
 - fixed systray : when clock change size
 - fixed systray segfault when xrandr change size
 
 2009-03-01
+
 - fixed segfault on tray application due to tint2
 
 2009-03-01
+
 - cleanup code
 - basic systray with some bugs
 - update documentation and tintrc sample for systray
 
 2009-02-27
+
 - fixed issue 49 : patch from Daniel Moerner
 - some systray code (doesn't work)
 - cleanup code
 
 2009-02-25
+
 - fixed issue 48 : tint2 does't create config file on first start
 
 2009-02-14
+
 - fixed issue 45 : segfault without clock
 
 2009-02-13
+
 - improved object oriented layout
 - tint2 looks good for me. if you see bugs, report it.
 
 2009-02-12
+
 - fixed issue 14 : no icons
 
 2009-02-11
+
 - fixed bug with number of desktop changed
 - fixed clock resize when date changed
 
 2009-02-08
+
 - backward compatibility with tint-0.6 (convert config file)
   feature freeze until next release. need bug correction.
 
 2009-02-07
+
 - better multi-monitor capability :
   -> panel_monitor = all : tint2 draw one panel per monitor
   -> panel_size = 90% 30 : panel_size accept percentage or pixel
@@ -826,6 +959,7 @@ released tint-0.7
 - update documentation and sample config file
 
 2009-02-03
+
 - better fixed for Robert Escriva problem : set_panel_properties -> Reserved space
 - fixed issue 13 with background detection
 - fixed bug with disconnected monitor (in multi monitor mode)
@@ -833,46 +967,57 @@ released tint-0.7
   it's a feature I would like, but implementation was buggy
 
 2009-01-29
+
 - use panel_margin parameter even with full_width
 - multi_monitor mode : monitor number are ordered according to coordinate
   so taskbar on the left show task in the left monitor
 
 2009-01-20
+
 - change config file format : add another padding parameter
 - update documentation and sample config file
 
 2009-01-19
+
 - patch from Robert Escriva, fixed tint2 on multi-monitor
 - fixed bug between MULTI_MONITOR mode and 'task on all desktop'
 
 2009-01-18
+
 - update documentation for new config format
 - fixed memory corruption
 - fixed bug with "task on all desktop" (issue 39)
 
 2009-01-17
+
 - fixed drawing of active task (with new layout)
 
 2009-01-05
+
 - fixed decorated window with compiz
 
 2008-12-30
+
 - fixed bug : segfault on ConfigureNotify event
 
 2008-11-12
+
 - fixed bug : segfault with icon
 - panel's left and right padding feel like WM background
   (right click open window managers's menu, ...)
 
 2008-11-02
+
 - fixed bugs with new design
 - panel.area manage the tree of visible objects
 
 2008-10-28
+
 - fixed issue : "untitled task", "task button did not update", "window don't shade",
   "error if I don't do 'make install'", "Makefile error"
 
 2008-09-24
+
 - change tintrc format
   user can define a list of background and border at the beginning of tintrc
   and each object (panel, taskbar, task, clock, systray) get a background number.
@@ -880,79 +1025,99 @@ released tint-0.7
   user's background start with number 1, 2, ...
 
 2008-09-22
+
 - better control on icon opacity
   icon opacity use the same value as text opacity
 
 2008-09-21
+
 - new parameter task_text = 0 or 1
   so you can show task's icon without text
 - remove task_icon_size parameter because icon_size is calculate with task->padding_y
 
 2008-09-19
+
 - improve clock drawing on 2 lines
 - new design : object oriented
     clock inherit Area (with draw_background)
 - rename parameter 'panel_mode' in 'taskbar_mode'
 
 2008-09-17
+
 - change name from tint to tint2 because debian has already a package named tint
 - new design : object oriented
     tasks inherit Area
     taskbars inherit Area
 
 2008-09-16
+
 - new design : object oriented
     remove task_margin parameter, replaced by taskbar_padding
     fixed segfault with new layout
 
 2008-09-04
+
 - new design : object oriented
   all objects inherit from Area : panel, taskbar, task, clock
 
 2008-09-02 licence changed to GPL V2
+
 >     Hi Pål,
 >     Since latest release (tint-0.6), I try to merge a systray in tint.
 >     The code I would like to merge is under GPL V2 licence.
 >     So are you agree to change the licence of tint to GPL V2 ?
+
 Pål Staurland answer :
  Yeah no problem::)
 
 2008-08-17 patch from i...@noctus.net
+
 - fixed bug : "Task button titles do not update"
 
 2008-08-12
+
 - code cleanup : Taskbar use GSLIST from glib
 
 2008-08-07
+
 - add 1 space between task title and icon
 
 2008-07-25
+
 - fixed bug when (task_rounded > panel_height/2)
 
 
-----------------------------------------------------------------
+---
+
 2008-07-20  thil7 <lorthiois@bbsoft.fr>
-released tint-0.6
+
+- released tint-0.6
 
 2008-07-19
+
 - backward compatibility : save new config file
 
 2008-07-18
+
 - bug fixed with multi-monitor : memory leak, move task on the same monitor
 
 2008-07-12
+
 - multi_monitor : added window_get_monitor(win)
 
 2008-07-05
+
 - multi_monitor : changed taskbar allocation when add/remove a monitor
 - update documentation
 
 2008-07-04
+
 - changed in config file, panel_show_all_desktop
   replaced by panel_mode = single_desktop / multi_desktop / multi_monitor
 - with panel_mode = multi_monitor, tint show one taskbar by monitor
 
 2008-07-02
+
 - add xinerama dependency
 - read monitors configuration
 - tint will run in 'sleep_mode'
@@ -960,26 +1125,32 @@ released tint-0.6
 - tint 'wake up' when the monitor is detected or resolution changed
 
 2008-06-30 patch from goo...@dougbarton.us
+
 - tint wait for window manager on startup
 
 2008-06-29
+
 - specify monitor with parameter 'panel_monitor'
 - panel_position is relative to your monitor
   panel_monitor = 1
   panel_position = bottom center
 
 2008-06-24
+
 - fixed bug : show tint on all desktop with fluxbox
 
 2008-06-23
+
 - task_width = 0 to get full taskbar width
 - added documentation in /doc
 
 2008-06-16
+
 - renamed parameter panel_margin to panel_padding
 - added parameter panel_margin = vertical_margin horizontal_margin
 
 2008-06-15
+
 - fixed bug : icon position changed when clock adjust width
 - removed boolean parameter panel_background and task_background
   replaced with opacity (alpha) = 0
@@ -988,58 +1159,72 @@ released tint-0.6
 - fixed bug : draw task below panel border
 
 2008-06-11
+
 - removed the need of desktop margin.
   tint specify margin to window magager (_NET_WM_STRUT)
 
 2008-06-10
+
 - fixed bug : time/date vertical and horizontal center
 
 2008-06-10  patch from benjaminfranzke
+
 - fixed bug : draw icon on 64bit system.
 
 2008-06-08
+
 - fixed bug : in draw border and fill background
 
 2008-06-04
+
 - allow config file on the command line : tint -c ./tintrc2
 - allow 2 value in config file : key = value1 value2
 - panel_margin can get 2 values : vertical_margin horizontal_margin
   panel_margin = 8 4
 
 2008-05-30
+
 - put panel below other window
 - set locale LANG
 
 2008-05-28
+
 - clock_width adjust automatically
 - configure : time2_format see 'man strftime'
 
 2008-05-27
+
 - configure : time1_format see 'man strftime'
 - cleanup code : refresh_pos()
 
 2008-05-26
+
 - catch time event in main loop
 - draw clock fixed format %H:%M
 
 2008-05-24
+
 - removed boolean parameter task_icon
   task_icon_size = 0 replace task_icon = 0
 - all colors parameters can get 2 values : color and opacity (alpha)
   font_color = #ffffff 70
 
 2008-05-23
+
 - cpu optimisation : limit call to visual_refresh()
 
 2008-05-22
+
 - configure clock : clock_font, clock_font_color
 
 
-----------------------------------------------------------------
+---
 2008-05-20  thil7 <lorthiois@bbsoft.fr>
-released tint-0.5
+
+- released tint-0.5
 
 2008-05-19
+
 - improve usability in mode 'show_all_desktop'
   -> don't switch desktop when close a task of another desktop
   -> allow to drag and drop task between desktop
@@ -1056,9 +1241,11 @@ released tint-0.5
 - cleanup code : send_event
 
 
-----------------------------------------------------------------
+---
+
 2008-05-14  thil7 <lorthiois@bbsoft.fr>
-released tint-0.4
+
+- released tint-0.4
 
 2008-05-12
 - boolean option 'show_all_desktop'
@@ -1073,11 +1260,14 @@ released tint-0.4
   because Pål Staurland put 'MIT licence' in all file source
 
 
-----------------------------------------------------------------
+---
+
 2008-05-10  thil7 <lorthiois@bbsoft.fr>
-released tint-0.3
+
+- released tint-0.3
 
 2008-05-10
+
 - manage events : 'send to desktop' and 'send to all desktop'
 - bug solved : 'close' action now send _NET_CLOSE_WINDOW
   so openoffice ask 'save document...' if needed
@@ -1088,24 +1278,29 @@ released tint-0.3
 - memory leak on g_build_filename
 
 
-----------------------------------------------------------------
+---
 2008-05-09  thil7 <lorthiois@bbsoft.fr>
-released tint-0.2
+
+- released tint-0.2
 
 2008-05-08
+
 - panel : add rounded and border (color and alpha)
 - remove option 'panel_tasks_centered'
 - user can configure mouse event on task
   (none, toggle, iconify, shade, close, toggle_iconify)
 
 2008-05-07
+
 - cpu optimisation : resize_tasks only when add/remove task,
   compute pos_y at startup
 
 2008-05-04
+
 - task width adjust when too many task
 
 2008-05-01
+
 - task : add rounded and border (color and alpha)
 - panel position (left, right, center) thank to ak47izatool
 - cleanup code : vertical position (icon and text),
@@ -1113,5 +1308,6 @@ released tint-0.2
 - panel : changed panel_margin and task_margin
 
 2008-04-22
+
 - fork ttm projet from p://code.google.com/p/ttm/ (by Pål Staurland staura@gmail.com)
   while the projet is no longer in developpement, have not changed the name of 'tint'.

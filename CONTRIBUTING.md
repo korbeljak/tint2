@@ -1,1 +1,1 @@
-Please read https://gitlab.com/o9000/tint2/wikis/Development
+Just fork this and create pull requests, even empty, then we talk.

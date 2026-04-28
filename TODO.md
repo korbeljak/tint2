@@ -46,11 +46,12 @@ Compatible default - non-continuous shell;
 
 ## Configurator
 
-- Better GUI toolkit;
+- Migrate to latest GTK.
+- Fix selecting item that causes the view to shift to the beginning of the list.
 
 ## Build system
 
-- Better replacement for cmake (not mandatory meson);
+- CMake stays
 
 ## Documentation
 

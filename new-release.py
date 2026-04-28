@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 import argparse
 import datetime
@@ -193,13 +193,13 @@ if __name__ == '__main__':
   assert_equal(run("./tint2-%s/build/tint2 -v" % readable_version).strip(), "tint2 version %s" % readable_version)
   os.system("git log -p -1 --word-diff")
 
-  print "Does this look correct? [y/n]"
+  print("Does this look correct? [y/n]")
   choice = raw_input().lower()
   if choice != "y":
     run("git reset --hard HEAD~ ; git tag -d %s ; git tag -d %s" % (version, readable_version))
     sys.exit(1)
 
-  print "Publish? [y/n]"
+  print("Publish? [y/n]")
   choice = raw_input().lower()
   if choice != "y":
     sys.exit(1)
