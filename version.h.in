@@ -1,0 +1,6 @@
+#if !defined(_TINT2_VERSION_H)
+#define _TINT2_VERSION_H
+
+#define VERSION_STRING "${TINT2_VERSION}"
+
+#endif // !defined(_TINT2_VERSION_H)
