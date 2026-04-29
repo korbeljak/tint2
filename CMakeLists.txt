@@ -128,7 +128,8 @@ include_directories( ${PROJECT_BINARY_DIR}
                      ${GOBJECT2_INCLUDE_DIRS}
                      ${IMLIB2_INCLUDE_DIRS}
                      ${RSVG_INCLUDE_DIRS}
-                     ${SN_INCLUDE_DIRS} )
+                     ${SN_INCLUDE_DIRS}
+                     ${CMAKE_BINARY_DIR}/include )
 
 set( SOURCES src/config-keys.c
              src/config.c
