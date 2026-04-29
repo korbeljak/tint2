@@ -1,5 +1,5 @@
-project(tint2conf)
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required( VERSION 3.18 )
+project(tint2conf C)
 
 include( FindPkgConfig )
 pkg_check_modules( X11_T2C REQUIRED x11 xcomposite xdamage xinerama xrender xrandr>=1.3 )
@@ -7,7 +7,22 @@ pkg_check_modules( GLIB2 REQUIRED glib-2.0 )
 pkg_check_modules( GOBJECT2 REQUIRED gobject-2.0 )
 pkg_check_modules( IMLIB2 REQUIRED imlib2 )
 pkg_check_modules( GTHREAD2 REQUIRED gthread-2.0 )
+
+set(TINT2CONF_GTK_VERSION "3" CACHE STRING "GTK version.")
+if ("${TINT2CONF_GTK_VERSION}" STREQUAL "4")
+pkg_check_modules( GTK4 REQUIRED gtk4-x11 )
+set(GTK_INC_DIRS ${GTK4_INCLUDE_DIRS})
+set(GTK_LIB_DIRS ${GTK4_LIBRARY_DIRS})
+set(GTK_LIBS ${GTK4_LIBRARIES})
+else()
 pkg_check_modules( GTK3 REQUIRED gtk+-x11-3.0 )
+set(GTK_INC_DIRS ${GTK3_INCLUDE_DIRS})
+set(GTK_LIB_DIRS ${GTK3_LIBRARY_DIRS})
+set(GTK_LIBS ${GTK3_LIBRARIES})
+endif()
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tint2conf_env.h.in ${CMAKE_BINARY_DIR}/include/tint2conf/tint2conf_env.h)
+
 pkg_check_modules( RSVG librsvg-2.0>=2.36.0 )
 
 include_directories( ..
@@ -17,8 +32,9 @@ include_directories( ..
                      ${GOBJECT2_INCLUDE_DIRS}
                      ${IMLIB2_INCLUDE_DIRS}
                      ${GTHREAD2_INCLUDE_DIRS}
-                     ${GTK3_INCLUDE_DIRS}
-                     ${RSVG_INCLUDE_DIRS} )
+                     ${GTK_INC_DIRS}
+                     ${RSVG_INCLUDE_DIRS}
+                     ${CMAKE_BINARY_DIR}/include )
 
 set(SOURCES ../config-keys.c
             ../util/common.c
@@ -53,19 +69,12 @@ if( ENABLE_RSVG )
   endif( RSVG_FOUND )
 endif( ENABLE_RSVG )
 
-#~ SET(CONFIG_KEYS_FILENAME_BASE "${PROJECT_SOURCE_DIR}/../config-keys")
-#~ add_custom_command( OUTPUT  "${CONFIG_KEYS_FILENAME_BASE}.c"    "${CONFIG_KEYS_FILENAME_BASE}.h"
-                    #~ DEPENDS "${CONFIG_KEYS_FILENAME_BASE}-list" "${CONFIG_KEYS_FILENAME_BASE}.c.in" "${CONFIG_KEYS_FILENAME_BASE}.h.in"
-                    #~ COMMAND codegen/srcpp LIST2CODE_CMD src/config-keys.c src/config-keys.h
-                    #~ VERBATIM
-                    #~ WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/../.." )
-
 link_directories( ${X11_T2C_LIBRARY_DIRS}
                   ${GLIB2_LIBRARY_DIRS}
                   ${GOBJECT2_LIBRARY_DIRS}
                   ${IMLIB2_LIBRARY_DIRS}
                   ${GTHREAD2_LIBRARY_DIRS}
-                  ${GTK3_LIBRARY_DIRS}
+                  ${GTK_LIB_DIRS}
                   ${RSVG_LIBRARY_DIRS} )
 add_executable( tint2conf ${SOURCES} )
 target_link_libraries( tint2conf ${X11_T2C_LIBRARIES}
@@ -73,7 +82,7 @@ target_link_libraries( tint2conf ${X11_T2C_LIBRARIES}
                                  ${GOBJECT2_LIBRARIES}
                                  ${IMLIB2_LIBRARIES}
                                  ${GTHREAD2_LIBRARIES}
-                                 ${GTK3_LIBRARIES}
+                                 ${GTK_LIBS}
                                  ${RSVG_LIBRARIES}
                                  m )
 

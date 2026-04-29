@@ -1,3 +1,8 @@
+#if !defined(_TINT2CONF_MAIN_H)
+#define _TINT2CONF_MAIN_H
+
+#include <tint2conf/tint2conf_env.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -5,7 +10,11 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <gtk/gtk.h>
+#if TINT2CONF_GTK_VERSION == 4
+#include <gdk/x11/gdkx.h>
+#else
 #include <gdk/gdkx.h>
+#endif // TINT2CONF_GTK_VERSION == 4
 
 #ifdef GETTEXT_PACKAGE
 #include <glib/gi18n-lib.h>
@@ -19,3 +28,5 @@ gboolean update_snapshot(gpointer ignored);
 void menuApply();
 void refresh_current_theme();
 extern GtkWidget *g_window;
+
+#endif // !defined(_TINT2CONF_MAIN_H)

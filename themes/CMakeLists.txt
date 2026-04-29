@@ -1,2 +1,3 @@
+cmake_minimum_required( VERSION 3.18 )
 file( GLOB EXTRATHEMEFILES *.tint2rc )
 install( FILES ${EXTRATHEMEFILES} DESTINATION ${CMAKE_INSTALL_DATADIR}/tint2 )

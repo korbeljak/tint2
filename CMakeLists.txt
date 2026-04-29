@@ -1,5 +1,5 @@
-project( tint2 )
 cmake_minimum_required( VERSION 3.18 )
+project( tint2 C)
 
 option( ENABLE_BATTERY "Enable battery status plugin" ON )
 option( ENABLE_TINT2CONF "Enable tint2conf build, a GTK+3 theme configurator for tint2" ON )
@@ -252,13 +252,6 @@ endif()
 
 add_custom_target( version ALL "${PROJECT_SOURCE_DIR}/get_version.sh" )
 
-#~ SET(CONFIG_KEYS_FILENAME_BASE "${PROJECT_SOURCE_DIR}/src/config-keys")
-#~ add_custom_command( OUTPUT  "${CONFIG_KEYS_FILENAME_BASE}.c"    "${CONFIG_KEYS_FILENAME_BASE}.h"
-                    #~ DEPENDS "${CONFIG_KEYS_FILENAME_BASE}-list" "${CONFIG_KEYS_FILENAME_BASE}.c.in" "${CONFIG_KEYS_FILENAME_BASE}.h.in"
-                    #~ COMMAND codegen/srcpp LIST2CODE_CMD src/config-keys.c src/config-keys.h
-                    #~ VERBATIM
-                    #~ WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}" )
-
 link_directories( ${X11_LIBRARY_DIRS}
                   ${PANGOCAIRO_LIBRARY_DIRS}
                   ${PANGO_LIBRARY_DIRS}
@@ -303,7 +296,7 @@ install( FILES tint2.svg DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scal
 install( FILES tint2.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications )
 install( FILES themes/tint2rc DESTINATION ${CMAKE_INSTALL_FULL_SYSCONFDIR}/xdg/tint2 )
 install( FILES default_icon.png DESTINATION ${CMAKE_INSTALL_DATADIR}/tint2 )
-install( FILES AUTHORS ChangeLog README.md doc/tint2.md DESTINATION ${docdir} )
+install( FILES AUTHORS changelog.md README.md doc/tint2.md DESTINATION ${docdir} )
 install( FILES doc/manual.html doc/readme.html DESTINATION ${htmldir} )
 install( DIRECTORY doc/images DESTINATION ${htmldir} )
 install( FILES doc/tint2.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 )

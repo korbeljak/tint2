@@ -6,7 +6,7 @@ This extremely simple panel was my daily driver for years, so it is time for me 
 
 This repo fixes several issues already, most notably snprintf-related crashes and crashes when the last item is removed from tray.
 
-I test on latest Arch, but I am willing to try and replicate issues in various platforms my box is able to support.
+I test on latest Arch, but I am willing to try and replicate issues on various platforms my box is able to support.
 
 Any help is welcome.
 
@@ -25,26 +25,26 @@ Documentation: [doc/tint2.md](doc/tint2.md)
 Compile it with (after you install the [dependencies](https://gitlab.com/o9000/tint2/wikis/Install#dependencies)):
 
 ```bash
-$ mkdir -p tint2/build
-$ cd tint2
-$ git clone https://github.com/korbeljak/tint2.git
-$ cd build
-$ cmake ../tint2
-$ make -j4
+mkdir -p tint2/build
+cd tint2
+git clone https://github.com/korbeljak/tint2.git
+cd build
+cmake ../tint2
+make -j4
 ```
 
 To install, run (as root):
 
 ```bash
-\# make install
-\# update-icon-caches /usr/local/share/icons/hicolor
-\# update-mime-database /usr/local/share/mime
+make install
+update-icon-caches /usr/local/share/icons/hicolor
+update-mime-database /usr/local/share/mime
 ```
 
 or on Arch:
 
 ```bash
-\# gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
+gtk-update-icon-cache -q -t -f /usr/share/icons/hicolor
 ```
 
 
