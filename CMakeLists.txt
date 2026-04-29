@@ -230,7 +230,7 @@ endif()
 if( ENABLE_TINT2CONF )
   add_definitions( -DHAVE_VERSION_H )
   add_subdirectory( src/tint2conf )
-  add_dependencies( tint2conf version )
+  add_dependencies( tint2conf )
 endif( ENABLE_TINT2CONF )
 
 if( ENABLE_ASAN )
@@ -250,7 +250,7 @@ else()
   SET(TRACING_L_FLAGS "")
 endif()
 
-add_custom_target( version ALL "${PROJECT_SOURCE_DIR}/get_version.sh" )
+#add_custom_target( version ALL "${PROJECT_SOURCE_DIR}/get_version.sh" )
 
 link_directories( ${X11_LIBRARY_DIRS}
                   ${PANGOCAIRO_LIBRARY_DIRS}
@@ -283,7 +283,7 @@ endif( RT_LIBRARY )
 
 target_link_libraries( tint2 m )
 
-add_dependencies( tint2 version )
+# add_dependencies( tint2 version )
 set_target_properties( tint2 PROPERTIES COMPILE_FLAGS "-Wall -Wpointer-arith -fno-strict-aliasing -pthread -std=${CSTD} ${ASAN_C_FLAGS} ${TRACING_C_FLAGS}" )
 set_target_properties( tint2 PROPERTIES LINK_FLAGS "-pthread -fno-strict-aliasing ${ASAN_L_FLAGS} ${BACKTRACE_L_FLAGS}  ${TRACING_L_FLAGS}" )
 
