@@ -1,0 +1,6 @@
+#if !defined(_TINT2CONF_ENV_H)
+#define _TINT2CONF_ENV_H
+
+#define TINT2CONF_GTK_VERSION ${TINT2CONF_GTK_VERSION}
+
+#endif // !defined(_TINT2CONF_ENV_H)
