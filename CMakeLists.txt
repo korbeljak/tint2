@@ -1,6 +1,8 @@
 cmake_minimum_required( VERSION 3.18 )
 project( tint2 C)
 
+set(TINT2_VERSION "17.1.4")
+
 option( ENABLE_BATTERY "Enable battery status plugin" ON )
 option( ENABLE_TINT2CONF "Enable tint2conf build, a GTK+3 theme configurator for tint2" ON )
 option( ENABLE_EXTRA_THEMES "Install additional tint2 themes" ON )
@@ -13,6 +15,9 @@ option( ENABLE_BACKTRACE_ON_SIGNAL "Dump a backtrace also when receiving signals
 if( CMAKE_SYSTEM_NAME STREQUAL "Linux" )
   option( ENABLE_UEVENT "Kernel event handling support" ON )
 endif( CMAKE_SYSTEM_NAME STREQUAL "Linux" )
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_BINARY_DIR}/include/version.h)
+
 
 include( GNUInstallDirs )
 if(NOT docdir)
