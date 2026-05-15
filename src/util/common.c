@@ -306,8 +306,8 @@ pid_t tint_exec(const char *command,
                 Area *area,
                 int x,
                 int y,
-                gboolean terminal,
-                gboolean startup_notification)
+                bool terminal,
+                bool startup_notification)
 {
     if (!command || !command[0])
         return -1;
@@ -452,7 +452,7 @@ pid_t tint_exec(const char *command,
 
 void tint_exec_no_sn(const char *command)
 {
-    tint_exec(command, NULL, NULL, 0, NULL, 0, 0, FALSE, FALSE);
+    tint_exec(command, NULL, NULL, 0, NULL, 0, 0, false, false);
 }
 #endif
 
@@ -711,14 +711,14 @@ gboolean is_color_attribute(PangoAttribute *attr, gpointer user_data)
     }
 }
 
-gboolean layout_set_markup_strip_colors(PangoLayout *layout, const char *markup)
+bool layout_set_markup_strip_colors(PangoLayout *layout, const char *markup)
 {
     PangoAttrList *attrs = NULL;
     char *text = NULL;
     GError *error = NULL;
     if (!pango_parse_markup(markup, -1, 0, &attrs, &text, NULL, &error)) {
         g_error_free(error);
-        return FALSE;
+        return false;
     }
 
     pango_layout_set_text(layout, text, -1);
@@ -727,7 +727,7 @@ gboolean layout_set_markup_strip_colors(PangoLayout *layout, const char *markup)
     pango_attr_list_filter(attrs, is_color_attribute, NULL);
     pango_layout_set_attributes(layout, attrs);
     pango_attr_list_unref(attrs);
-    return TRUE;
+    return true;
 }
 
 void draw_shadow(cairo_t *c, int posx, int posy, PangoLayout *shadow_layout)
@@ -952,7 +952,7 @@ void get_text_size2(const PangoFontDescription *font,
                     PangoWrapMode wrap,
                     PangoEllipsizeMode ellipsis,
                     PangoAlignment alignment,
-                    gboolean markup,
+                    bool markup,
                     double scale)
 {
     PangoRectangle rect;
@@ -1134,7 +1134,7 @@ GString *tint2_g_string_replace(GString *s, const char *from, const char *to)
         }
     }
     g_string_assign(s, result->str);
-    g_string_free(result, TRUE);
+    g_string_free(result, true);
     return s;
 }
 

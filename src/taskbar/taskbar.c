@@ -38,13 +38,13 @@ GHashTable *win_to_task;
 
 Task *active_task;
 Task *task_drag;
-gboolean taskbar_enabled;
-gboolean taskbar_distribute_size;
-gboolean hide_task_diff_desktop;
-gboolean hide_inactive_tasks;
-gboolean hide_task_diff_monitor;
-gboolean hide_taskbar_if_empty;
-gboolean always_show_all_desktop_tasks;
+bool taskbar_enabled;
+bool taskbar_distribute_size;
+bool hide_task_diff_desktop;
+bool hide_inactive_tasks;
+bool hide_task_diff_monitor;
+bool hide_taskbar_if_empty;
+bool always_show_all_desktop_tasks;
 TaskbarSortMethod taskbar_sort_method;
 Alignment taskbar_alignment;
 static Timer thumbnail_update_timer_all;
@@ -81,13 +81,13 @@ void default_taskbar()
 {
     win_to_task = NULL;
     urgent_list = NULL;
-    taskbar_enabled = FALSE;
-    taskbar_distribute_size = FALSE;
-    hide_task_diff_desktop = FALSE;
-    hide_inactive_tasks = FALSE;
-    hide_task_diff_monitor = FALSE;
-    hide_taskbar_if_empty = FALSE;
-    always_show_all_desktop_tasks = FALSE;
+    taskbar_enabled = false;
+    taskbar_distribute_size = false;
+    hide_task_diff_desktop = false;
+    hide_inactive_tasks = false;
+    hide_task_diff_monitor = false;
+    hide_taskbar_if_empty = false;
+    always_show_all_desktop_tasks = false;
     taskbar_thumbnail_jobs_done = NULL;
     taskbar_sort_method = TASKBAR_NOSORT;
     taskbar_alignment = ALIGN_LEFT;
@@ -193,7 +193,7 @@ void init_taskbar()
     INIT_TIMER(thumbnail_update_timer_tooltip);
 
     if (!panel_config.g_task.has_text && !panel_config.g_task.has_icon)
-        panel_config.g_task.has_text = panel_config.g_task.has_icon = TRUE;
+        panel_config.g_task.has_text = panel_config.g_task.has_icon = true;
 
     if (panel_config.g_task.thumbnail_width < 8)
         panel_config.g_task.thumbnail_width = 210;
@@ -246,8 +246,8 @@ void init_taskbar_panel(void *p)
     panel->g_taskbar.area_name._is_under_mouse      = full_width_area_is_under_mouse;
     panel->g_taskbar.area_name._draw_foreground     = draw_taskbarname;
     panel->g_taskbar.area_name._on_change_layout    = 0;
-    panel->g_taskbar.area_name.resize_needed        = TRUE;
-    panel->g_taskbar.area_name.on_screen            = TRUE;
+    panel->g_taskbar.area_name.resize_needed        = true;
+    panel->g_taskbar.area_name.on_screen            = true;
 
     // taskbar
     panel->g_taskbar.area.parent = panel;
@@ -258,8 +258,8 @@ void init_taskbar_panel(void *p)
     panel->g_taskbar.area._resize               = resize_taskbar;
     panel->g_taskbar.area._get_desired_size     = taskbar_get_desired_size;
     panel->g_taskbar.area._is_under_mouse       = full_width_area_is_under_mouse;
-    panel->g_taskbar.area.resize_needed         = TRUE;
-    panel->g_taskbar.area.on_screen             = TRUE;
+    panel->g_taskbar.area.resize_needed         = true;
+    panel->g_taskbar.area.on_screen             = true;
     if (panel_horizontal)
     {
         panel->g_taskbar.area.posy   = top_border_width( & panel->area) + panel->area.paddingy * panel->scale;
@@ -287,8 +287,8 @@ void init_taskbar_panel(void *p)
     panel->g_task.area.size_mode            = LAYOUT_DYNAMIC;
     panel->g_task.area._draw_foreground     = draw_task;
     panel->g_task.area._on_change_layout    = on_change_task;
-    panel->g_task.area.resize_needed        = TRUE;
-    panel->g_task.area.on_screen            = TRUE;
+    panel->g_task.area.resize_needed        = true;
+    panel->g_task.area.on_screen            = true;
     if ((panel->g_task.config_asb_mask & (1 << TASK_NORMAL)) == 0)
     {
         panel->g_task.alpha[TASK_NORMAL] = 100;
@@ -423,13 +423,13 @@ void taskbar_default_font_changed()
     if (!taskbar_enabled)
         return;
 
-    gboolean needs_update = FALSE;
+    bool needs_update = false;
     for (int i = 0; i < num_panels; i++)
         if (!panels[i].g_task.has_font)
         {
             pango_font_description_free(panels[i].g_task.font_desc);
             panels[i].g_task.font_desc = NULL;
-            needs_update = TRUE;
+            needs_update = true;
         }
     if (!needs_update)
         return;
@@ -440,7 +440,7 @@ void taskbar_default_font_changed()
             Taskbar *taskbar = &panels[i].taskbar[j];
             for (GList *c = taskbar->area.children; c; c = c->next) {
                 Task *t = c->data;
-                t->area.resize_needed = TRUE;
+                t->area.resize_needed = true;
                 schedule_redraw(&t->area);
             }
         }
@@ -558,7 +558,7 @@ int taskbar_get_desired_size(void *obj)
     return result;
 }
 
-gboolean resize_taskbar(void *obj)
+bool resize_taskbar(void *obj)
 {
     Taskbar *taskbar = obj;
     Panel *panel = taskbar->area.panel;
@@ -584,15 +584,15 @@ gboolean resize_taskbar(void *obj)
                             - right_border_width (&panel->g_task.area)
                             - panel->g_task.area.paddingx * panel->scale;
     }
-    return FALSE;
+    return false;
 }
 
-gboolean taskbar_is_empty(Taskbar *taskbar)
+bool taskbar_is_empty(Taskbar *taskbar)
 {
     for_taskbar_tasks( taskbar, l)
         if (((Task *)l->data)->area.on_screen)
-            return FALSE;
-    return TRUE;
+            return false;
+    return true;
 }
 
 void update_taskbar_visibility(Taskbar *taskbar)
@@ -661,7 +661,7 @@ gint compare_tasks_trivial(Task *a, Task *b, Taskbar *taskbar)
         :   NONTRIVIAL;
 }
 
-gboolean contained_within(Task *a, Task *b)
+bool contained_within(Task *a, Task *b)
 {
     return ((a->win_x <= b->win_x) &&
             (a->win_y <= b->win_y) &&
@@ -725,7 +725,7 @@ gint compare_tasks(Task *a, Task *b, Taskbar *taskbar)
     return 0;
 }
 
-gboolean taskbar_needs_sort(Taskbar *taskbar)
+bool taskbar_needs_sort(Taskbar *taskbar)
 {
     if (taskbar_sort_method != TASKBAR_NOSORT)
         for (GList *i = taskbar->area.children, *j = i ? i->next : NULL;
@@ -733,9 +733,9 @@ gboolean taskbar_needs_sort(Taskbar *taskbar)
             i = i->next, j = j->next)
         {
             if (compare_tasks(i->data, j->data, taskbar) > 0)
-                return TRUE;
+                return true;
         }
-    return FALSE;
+    return false;
 }
 
 void sort_tasks(Taskbar *taskbar)

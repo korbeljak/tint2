@@ -28,7 +28,7 @@
 #include "timer.h"
 
 static int x, y, width, height;
-static gboolean just_shown;
+static bool just_shown;
 
 // the next functions are helper functions for tooltip handling
 void start_show_timer();
@@ -51,7 +51,7 @@ void default_tooltip()
     g_tooltip.font_color.rgb[1] = 1;
     g_tooltip.font_color.rgb[2] = 1;
     g_tooltip.font_color.alpha  = 1;
-    just_shown = FALSE;
+    just_shown = false;
 }
 
 void cleanup_tooltip()
@@ -115,7 +115,7 @@ void tooltip_trigger_show(Area *area, Panel *p, XEvent *e)
     // Position the tooltip in the center of the area
     x = area->posx + MIN(area->width / 3, 22) + e->xmotion.x_root - e->xmotion.x;
     y = area->posy + area->height / 2 + e->xmotion.y_root - e->xmotion.y;
-    just_shown = TRUE;
+    just_shown = true;
     g_tooltip.panel = p;
     if (!g_tooltip.mapped)
         start_show_timer();
@@ -261,7 +261,7 @@ void tooltip_update()
     if (just_shown) {
         if (!panel_horizontal)
             y -= height / 2; // center vertically
-        just_shown = FALSE;
+        just_shown = false;
     }
     tooltip_adjust_geometry();
     XMoveResizeWindow(server.display, g_tooltip.window, x, y, width, height);

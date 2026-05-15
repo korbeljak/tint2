@@ -132,17 +132,17 @@ void expand_exec(DesktopEntry *entry, const char *path)
 static char *df_opts_sv[] = {"Exec", "Icon", "NoDisplay", "Path", "StartupNotify", "Terminal"};
 enum                        {i_Exec, i_Icon, i_NoDisplay, i_Path, i_StartupNotify, i_Terminal, DF_OPTIONS};
 
-gboolean read_desktop_file_full_path(const char *path, DesktopEntry *entry)
+bool read_desktop_file_full_path(const char *path, DesktopEntry *entry)
 {
     entry->name = entry->generic_name = entry->icon = entry->exec = entry->cwd = NULL;
-    entry->hidden_from_menus = FALSE;
-    entry->start_in_terminal = FALSE;
-    entry->startup_notification = TRUE;
+    entry->hidden_from_menus = false;
+    entry->start_in_terminal = false;
+    entry->startup_notification = true;
 
     FILE *fp = fopen(path, "rt");
     if (fp == NULL) {
         fprintf(stderr, "tint2: Could not open file %s\n", path);
-        return FALSE;
+        return false;
     }
 
     const gchar **languages = (const gchar **)g_get_language_names();
@@ -164,7 +164,7 @@ gboolean read_desktop_file_full_path(const char *path, DesktopEntry *entry)
     int lang_index_name = lang_index_default + 1;
     int lang_index_generic_name = lang_index_name;
 
-    gboolean inside_desktop_entry = FALSE;
+    bool inside_desktop_entry = false;
     char *line = NULL;
     size_t line_size;
     ssize_t len;
@@ -246,9 +246,9 @@ gboolean read_desktop_file_full_path(const char *path, DesktopEntry *entry)
     return entry->exec != NULL;
 }
 
-gboolean read_desktop_file(const char *path, DesktopEntry *entry)
+bool read_desktop_file(const char *path, DesktopEntry *entry)
 {
-    gboolean success = FALSE;
+    bool success = false;
 
     gchar *full_path = NULL;
     int full_path_avail = 0;

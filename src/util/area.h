@@ -7,6 +7,7 @@
 #define AREA_H
 
 #include <glib.h>
+#include <stdbool.h>
 #include <X11/Xlib.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
@@ -187,15 +188,15 @@ typedef struct Area {
     void *panel;                // Pointer to the Panel that contains this Area
     Layout size_mode;
     Alignment alignment;
-    gboolean has_mouse_over_effect;
-    gboolean has_mouse_press_effect;
+    bool has_mouse_over_effect;
+    bool has_mouse_press_effect;
     int paddingx, // longitudinal padding
         spacing,  // spacing
         paddingy; // transverse padding
     MouseState mouse_state;
-    gboolean on_screen;         // Set to non-zero if the Area is visible. An object may exist but stay hidden.
-    gboolean resize_needed;     // Set to non-zero if the size of the Area has to be recalculated.
-    gboolean _redraw_needed;    // Set to non-zero if the Area has to be redrawn.
+    bool on_screen;         // Set to non-zero if the Area is visible. An object may exist but stay hidden.
+    bool resize_needed;     // Set to non-zero if the size of the Area has to be recalculated.
+    bool _redraw_needed;    // Set to non-zero if the Area has to be redrawn.
                                 // Do not set this directly; use schedule_redraw() instead.
     ChangeState _changed;       // Bitfield, indicating geometry change; _on_change_layout must be called when this is set
     Pixmap pix;                 // Pointer to pixmap for current state. All rendering goes there.
@@ -211,7 +212,7 @@ typedef struct Area {
     void (*_draw_foreground)(void *obj, cairo_t *c);
     // Called on draw, obj = pointer to the Area
 
-    gboolean (*_resize)(void *obj);
+    bool (*_resize)(void *obj);
     // Called on resize, obj = pointer to the Area
     // Returns 1 if the new size is different than the previous size.
 
@@ -228,7 +229,7 @@ typedef struct Area {
     // The caller takes ownership of the pointer.
     cairo_surface_t *(*_get_tooltip_image)(void *obj);
 
-    gboolean (*_is_under_mouse)(void *obj, int x, int y);
+    bool (*_is_under_mouse)(void *obj, int x, int y);
     // Returns true if the Area handles a mouse event at the given x, y coordinates relative to the window.
     // Leave this to NULL to use a default implementation.
 
@@ -274,7 +275,7 @@ int text_area_get_desired_size(Area *area,
                                    const char *line2,
                                    PangoFontDescription *line1_font_desc,
                                    PangoFontDescription *line2_font_desc);
-gboolean resize_text_area(Area *area,
+bool resize_text_area(Area *area,
                           const char *line1,
                           const char *line2,
                           PangoFontDescription *line1_font_desc,
@@ -339,10 +340,10 @@ Area *find_area_under_mouse(void *root, int x, int y);
 // Returns the area under the mouse for the given x, y mouse coordinates relative to the window.
 // If no area is found, returns the root.
 
-gboolean area_is_under_mouse(void *obj, int x, int y);
+bool area_is_under_mouse(void *obj, int x, int y);
 // Returns true if the Area handles a mouse event at the given x, y coordinates relative to the window.
 
-gboolean full_width_area_is_under_mouse(void *obj, int x, int y);
+bool full_width_area_is_under_mouse(void *obj, int x, int y);
 // Returns true if the Area handles a mouse event at the given x, y coordinates relative to the window.
 // The Area will also handle clicks on the border of its ancestors, including the panel.
 // Useful so that a click at the edge of the screen is still handled by task buttons etc., even if technically
@@ -354,15 +355,15 @@ void area_gradients_reset( Area *area);
 
 void area_dump_geometry(Area *area, int indent);
 
-void mouse_over(Area *area, gboolean pressed);
+void mouse_over(Area *area, bool pressed);
 void mouse_out();
 
 void update_gradient(GradientInstance *gi);
 void update_dependent_gradients(Area *a);
 
-gboolean area_is_end(void *obj, gboolean first);
-#define area_is_first(a) area_is_end(a, TRUE)
-#define area_is_last(a)  area_is_end(a, FALSE)
+bool area_is_end(void *obj, bool first);
+#define area_is_first(a) area_is_end(a, true)
+#define area_is_last(a)  area_is_end(a, false)
 
 #define for_panel_items_order(...)                                                       \
 for (int items_n = strlen(panel_items_order), k = 0; k < items_n __VA_ARGS__; k++)

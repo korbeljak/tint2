@@ -169,7 +169,7 @@ void cleanup_server()
     if (server.gc)
         XFreeGC(server.display, server.gc);
     server.gc = NULL;
-    server.disable_transparency = FALSE;
+    server.disable_transparency = false;
 #ifdef HAVE_SN
     if (server.pids)
         g_tree_destroy(server.pids);
@@ -618,7 +618,7 @@ void server_init_visual()
         attrs.event_mask = StructureNotifyMask;
         XChangeWindowAttributes(server.display, server.composite_manager, CWEventMask, &attrs);
 
-        server.real_transparency = TRUE;
+        server.real_transparency = true;
         server.depth = 32;
         fprintf(stderr, "tint2: real transparency on... depth: %d\n", server.depth);
         server.colormap = server.colormap32;
@@ -627,7 +627,7 @@ void server_init_visual()
     else
     {
         // no composite manager or snapshot mode => fake transparency
-        server.real_transparency = FALSE;
+        server.real_transparency = false;
         server.depth = DefaultDepth(server.display, server.screen);
         fprintf(stderr, "tint2: real transparency off.... depth: %d\n", server.depth);
         server.colormap = DefaultColormap(server.display, server.screen);

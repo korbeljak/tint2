@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -81,7 +82,7 @@ void handle_cli_arguments(int argc, char **argv)
 {
     // Read command line arguments
     for (int i = 1; i < argc; ++i) {
-        gboolean error = FALSE;
+        bool error = false;
 
         switch (str_index ( argv[i], help_opt_sv, HELP_KEYS ))
         {
@@ -110,7 +111,7 @@ void handle_cli_arguments(int argc, char **argv)
                     i++;
                     config_path = strdup(argv[i]);
                 } else {
-                    error = TRUE;
+                    error = true;
                 }
                 break;
             case help_key_s: case help_key_snapshot:
@@ -118,7 +119,7 @@ void handle_cli_arguments(int argc, char **argv)
                     i++;
                     snapshot_path = strdup(argv[i]);
                 } else {
-                    error = TRUE;
+                    error = true;
                 }
                 break;
         #ifdef ENABLE_BATTERY
@@ -127,7 +128,7 @@ void handle_cli_arguments(int argc, char **argv)
                     i++;
                     battery_sys_prefix = strdup(argv[i]);
                 } else {
-                    error = TRUE;
+                    error = true;
                 }
                 break;
         #endif
@@ -135,7 +136,7 @@ void handle_cli_arguments(int argc, char **argv)
                 if (i + 1 == argc)
                     config_path = strdup(argv[i]);
                 else
-                    error = TRUE;
+                    error = true;
         }
         if (error) {
             print_usage();
@@ -236,7 +237,7 @@ void load_default_task_icon()
     {
         gchar *path = strdup_printf( NULL, "%s/tint2/default_icon.png", data_dirs[i]);
         if (g_file_test(path, G_FILE_TEST_EXISTS))
-            default_icon = load_image(path, TRUE);
+            default_icon = load_image(path, true);
         free( path);
     }
     if (!default_icon)
@@ -291,7 +292,7 @@ void init_X11_pre_config()
     get_monitors();
     get_desktops();
 
-    server.disable_transparency = FALSE;
+    server.disable_transparency = false;
 
     xsettings_client = xsettings_client_new(server.display, server.screen, xsettings_notify_cb, NULL, NULL);
 }
@@ -367,7 +368,7 @@ void cleanup()
     server.errors = NULL;
 
     if (sigchild_pipe_valid) {
-        sigchild_pipe_valid = FALSE;
+        sigchild_pipe_valid = false;
         close(sigchild_pipe[1]);
         close(sigchild_pipe[0]);
     }

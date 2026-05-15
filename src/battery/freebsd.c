@@ -20,11 +20,12 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "battery.h"
 
-gboolean battery_os_init()
+bool battery_os_init()
 {
     int sysctl_out = 0;
     size_t len = sizeof(sysctl_out);
@@ -91,7 +92,7 @@ char *battery_os_tooltip()
     g_string_append_printf(tooltip, battery_state.ac_connected ? "\tConnected" : "\tDisconnected");
 
     result = tooltip->str;
-    g_string_free(tooltip, FALSE);
+    g_string_free(tooltip, false);
 
     return result;
 }

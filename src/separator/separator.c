@@ -88,8 +88,8 @@ void init_separator_panel(void *p)
         separator->area.panel = p;
         snprintf (separator->area.name, strlen_const(separator->area.name), "separator");
         separator->area.size_mode = LAYOUT_FIXED;
-        separator->area.resize_needed = TRUE;
-        separator->area.on_screen = TRUE;
+        separator->area.resize_needed = true;
+        separator->area.on_screen = true;
         separator->area._resize = resize_separator;
         separator->area._get_desired_size = separator_get_desired_size;
         separator->area._draw_foreground = draw_separator;
@@ -121,9 +121,9 @@ int separator_get_desired_size(void *obj)
             + (panel_horizontal ? left_right_border_width : top_bottom_border_width)(&separator->area);
 }
 
-gboolean resize_separator(void *obj)
+bool resize_separator(void *obj)
 {
-    gboolean result = FALSE;
+    bool result = false;
     Separator *separator = obj;
     Panel *panel = separator->area.panel;
     if (!separator->area.on_screen)

@@ -41,15 +41,15 @@
 #include "apps-common.h"
 #include "icon-theme-common.h"
 
-gboolean launcher_enabled;
+bool launcher_enabled;
 int launcher_max_icon_size;
-gboolean launcher_tooltip_enabled;
+bool launcher_tooltip_enabled;
 int launcher_alpha;
 int launcher_saturation;
 int launcher_brightness;
 char *icon_theme_name_config;
 char *icon_theme_name_xsettings;
-gboolean launcher_icon_theme_override;
+bool launcher_icon_theme_override;
 Background *launcher_icon_bg;
 GList *launcher_icon_gradients;
 
@@ -68,16 +68,16 @@ void relayout_launcher();
 
 void default_launcher()
 {
-    launcher_enabled = FALSE;
+    launcher_enabled = false;
     launcher_max_icon_size = 0;
-    launcher_tooltip_enabled = FALSE;
+    launcher_tooltip_enabled = false;
     launcher_alpha = 100;
     launcher_saturation = 0;
     launcher_brightness = 0;
     icon_theme_name_config = NULL;
     icon_theme_name_xsettings = NULL;
-    launcher_icon_theme_override = FALSE;
-    startup_notifications = FALSE;
+    launcher_icon_theme_override = false;
+    startup_notifications = false;
     launcher_icon_bg = NULL;
     launcher_icon_gradients = NULL;
 }
@@ -99,7 +99,7 @@ void init_launcher_panel(void *p)
     launcher->area._resize = resize_launcher;
     launcher->area._on_change_layout = relayout_launcher;
     launcher->area._get_desired_size = launcher_get_desired_size;
-    launcher->area.resize_needed = TRUE;
+    launcher->area.resize_needed = true;
     schedule_redraw(&launcher->area);
     if (!launcher->area.bg)
         launcher->area.bg = &g_array_index(backgrounds, Background, 0);
@@ -114,7 +114,7 @@ void init_launcher_panel(void *p)
     // This will be recomputed on resize, we just initialize to a non-zero value
     launcher->icon_size = launcher_max_icon_size > 0 ? launcher_max_icon_size * panel->scale : 24;
 
-    launcher->area.on_screen = TRUE;
+    launcher->area.on_screen = true;
     schedule_panel_redraw();
     area_gradients_create(&launcher->area);
 
@@ -142,7 +142,7 @@ void cleanup_launcher()
     free_and_null( icon_theme_name_config);
     free_and_null( icon_theme_name_xsettings);
 
-    launcher_enabled = FALSE;
+    launcher_enabled = false;
 }
 
 void cleanup_launcher_theme(Launcher *launcher)
@@ -235,7 +235,7 @@ int launcher_get_desired_size(void *obj)
     return size;
 }
 
-gboolean resize_launcher(void *obj)
+bool resize_launcher(void *obj)
 {
     Launcher *launcher = obj;
     Panel *panel = launcher->area.panel;
@@ -256,24 +256,24 @@ gboolean resize_launcher(void *obj)
     save_icon_cache(icon_theme_wrapper);
 
     int count = 0;
-    gboolean needs_repositioning = FALSE;
+    bool needs_repositioning = false;
     for (GSList *l = launcher->list_icons; l; l = l->next) {
         LauncherIcon *launcherIcon = l->data;
         if (launcherIcon->area.on_screen) {
             count++;
             if (launcherIcon->area.posx < 0 || launcherIcon->area.posy < 0)
-                needs_repositioning = TRUE;
+                needs_repositioning = true;
         }
     }
 
     if (!needs_repositioning) {
         if (panel_horizontal) {
             if (launcher->area.width == size)
-                return FALSE;
+                return false;
             launcher->area.width = size;
         } else {
             if (launcher->area.height == size)
-                return FALSE;
+                return false;
             launcher->area.height = size;
         }
     }
@@ -327,7 +327,7 @@ gboolean resize_launcher(void *obj)
             ((LauncherIcon *)l->data)->area._is_under_mouse = NULL;
     }
 
-    return TRUE;
+    return true;
 }
 
 void relayout_launcher(void *obj)
@@ -450,7 +450,7 @@ void launcher_action(LauncherIcon *icon, XEvent *evt, int x, int y)
                   x, y,
                   icon->start_in_terminal,
                   icon->startup_notification);
-        g_string_free(cmd, TRUE);
+        g_string_free(cmd, true);
     }
 }
 
@@ -470,11 +470,11 @@ void launcher_load_icons(Launcher *launcher)
         launcherIcon->area._resize = NULL;
         launcherIcon->area._get_desired_size = launcher_icon_get_desired_size;
         snprintf(launcherIcon->area.name, strlen_const(launcherIcon->area.name), "LauncherIcon %d", index);
-        launcherIcon->area.resize_needed = FALSE;
+        launcherIcon->area.resize_needed = false;
         launcherIcon->area.has_mouse_over_effect = panel_config.mouse_effects;
         launcherIcon->area.has_mouse_press_effect = launcherIcon->area.has_mouse_over_effect;
         launcherIcon->area.bg = launcher_icon_bg;
-        launcherIcon->area.on_screen = TRUE;
+        launcherIcon->area.on_screen = true;
         launcherIcon->area.posx = -1;
         launcherIcon->area._on_change_layout = launcher_icon_on_change_layout;
         launcherIcon->area._dump_geometry = launcher_icon_dump_geometry;
@@ -542,15 +542,15 @@ void launcher_reload_icon_image(Launcher *launcher, LauncherIcon *launcherIcon)
     free_icon(launcherIcon->image_pressed);
     launcherIcon->image = NULL;
 
-    char *new_icon_path = get_icon_path(icon_theme_wrapper, launcherIcon->icon_name, launcherIcon->icon_size, TRUE);
+    char *new_icon_path = get_icon_path(icon_theme_wrapper, launcherIcon->icon_name, launcherIcon->icon_size, true);
     if (new_icon_path)
-        launcherIcon->image = load_image(new_icon_path, TRUE);
+        launcherIcon->image = load_image(new_icon_path, true);
     // On loading error, fallback to default
     if (!launcherIcon->image) {
         free(new_icon_path);
-        new_icon_path = get_icon_path(icon_theme_wrapper, DEFAULT_ICON, launcherIcon->icon_size, TRUE);
+        new_icon_path = get_icon_path(icon_theme_wrapper, DEFAULT_ICON, launcherIcon->icon_size, true);
         if (new_icon_path)
-            launcherIcon->image = load_image(new_icon_path, TRUE);
+            launcherIcon->image = load_image(new_icon_path, true);
     }
     Imlib_Image original = launcherIcon->image;
     launcherIcon->image = scale_adjust_icon( launcherIcon->image, launcherIcon->icon_size);
@@ -590,7 +590,7 @@ void launcher_default_icon_theme_changed()
         Launcher *launcher = &panels[i].launcher;
         cleanup_launcher_theme(launcher);
         launcher_load_icons(launcher);
-        launcher->area.resize_needed = TRUE;
+        launcher->area.resize_needed = true;
     }
     schedule_panel_redraw();
 }

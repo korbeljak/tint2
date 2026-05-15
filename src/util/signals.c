@@ -73,7 +73,7 @@ void init_signals()
 #endif
 }
 
-int sigchild_pipe_valid = FALSE;
+int sigchild_pipe_valid = false;
 int sigchild_pipe[2];
 
 static void sigchld_handler(int sig)
@@ -122,17 +122,17 @@ void handle_sigchld_events( fd_set *fds, int *fdn)
 
 void init_signals_postconfig()
 {
-    gboolean need_sigchld = FALSE;
+    bool need_sigchld = false;
 #ifdef HAVE_SN
     // Initialize startup-notification
     if (startup_notifications) {
         server.sn_display = sn_display_new(server.display, error_trap_push, error_trap_pop);
         server.pids = g_tree_new(cmp_ptr);
-        need_sigchld = TRUE;
+        need_sigchld = true;
     }
 #endif // HAVE_SN
     if (panel_config.execp_list)
-        need_sigchld = TRUE;
+        need_sigchld = true;
 
     if (need_sigchld) {
         // Setup a handler for child termination

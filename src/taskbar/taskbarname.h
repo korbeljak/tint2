@@ -8,7 +8,7 @@
 #include "common.h"
 #include "area.h"
 
-extern gboolean taskbarname_enabled;
+extern bool taskbarname_enabled;
 extern Color taskbarname_font_color;
 extern Color taskbarname_active_font_color;
 
@@ -19,7 +19,7 @@ void init_taskbarname_panel(void *p);
 
 void draw_taskbarname(void *obj, cairo_t *c);
 
-gboolean resize_taskbarname(void *obj);
+bool resize_taskbarname(void *obj);
 
 void taskbarname_default_font_changed();
 

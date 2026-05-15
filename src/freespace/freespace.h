@@ -5,6 +5,7 @@
 #ifndef FREESPACE_H
 #define FREESPACE_H
 
+#include <stdbool.h>
 #include "common.h"
 #include "area.h"
 
@@ -17,6 +18,6 @@ struct Panel;
 void cleanup_freespace(struct Panel *panel);
 void init_freespace_panel(void *panel);
 
-gboolean resize_freespace(void *obj);
+bool resize_freespace(void *obj);
 
 #endif

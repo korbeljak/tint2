@@ -53,7 +53,7 @@ static int uevent_new(struct uevent *ev, char *buffer, int size)
 // Fills event structure, pointed by ev.
 // Returns 1 on success, 0 on error.
 {
-    gboolean first = TRUE;
+    bool first = true;
 
     if (!size || !ev)
         return 0;
@@ -72,7 +72,7 @@ static int uevent_new(struct uevent *ev, char *buffer, int size)
             }
             ev->path = (char *) ++p;
             s = strchr(p, '\0') + 1;
-            first = FALSE;
+            first = false;
         }
         else
         {

@@ -25,9 +25,9 @@ typedef enum TaskState {
 
 typedef struct GlobalTask {
     Area area;
-    gboolean has_text;
-    gboolean has_icon;
-    gboolean centered;
+    bool has_text;
+    bool has_icon;
+    bool centered;
     int icon_posy;
     int icon_size1;
     int maximum_width;
@@ -43,13 +43,13 @@ typedef struct GlobalTask {
     double text_posx, text_height;
     // starting position for text ~ task_padding + task_border + icon_size + spacing
 
-    gboolean has_font;
-    gboolean has_content_tint;
+    bool has_font;
+    bool has_content_tint;
     PangoFontDescription *font_desc;
     Color font[TASK_STATE_COUNT];
     int config_font_mask;
-    gboolean tooltip_enabled;
-    gboolean thumbnail_enabled;
+    bool tooltip_enabled;
+    bool thumbnail_enabled;
     int thumbnail_width;
 } GlobalTask;
 
@@ -100,7 +100,7 @@ void on_change_task(void *obj);
 
 void task_update_icon(Task *task);
 void task_update_desktop(Task *task);
-gboolean task_update_title(Task *task);
+bool task_update_title(Task *task);
 void reset_active_task();
 void set_task_state(Task *task, TaskState state);
 void task_handle_mouse_event(Task *task, MouseAction action);

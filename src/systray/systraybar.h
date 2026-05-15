@@ -43,8 +43,8 @@ typedef struct {
     int x, y;
     int width, height;
     int depth;
-    gboolean reparented;
-    gboolean embedded;
+    bool reparented;
+    bool embedded;
     int pid;        // Process PID or zero.
     int chrono;     // A number that is incremented for each new icon, used to sort them by the order in which they were created.
     char *name;     // Name of the tray icon window.
@@ -65,11 +65,11 @@ typedef struct {
 
 extern Window net_sel_win;  // net_sel_win != None when protocol started
 extern Systray systray;
-extern gboolean refresh_systray;
-extern gboolean systray_enabled;
+extern bool refresh_systray;
+extern bool systray_enabled;
 extern int systray_max_icon_size;
 extern int systray_monitor;
-extern gboolean systray_profile;
+extern bool systray_profile;
 extern char *systray_hide_name_filter;
 
 void default_systray(); // default global data
@@ -80,9 +80,9 @@ void init_systray_panel(void *p);
 // initialize protocol and panel position
 
 void draw_systray(void *obj, cairo_t *c);
-gboolean resize_systray(void *obj);
+bool resize_systray(void *obj);
 void on_change_systray(void *obj);
-gboolean systray_on_monitor(int i_monitor, int num_panels);
+bool systray_on_monitor(int i_monitor, int num_panels);
 
 // systray protocol
 // many tray icon doesn't manage stop/restart of the systray manager
@@ -90,17 +90,17 @@ void start_net();
 void stop_net();
 void handle_systray_event(XClientMessageEvent *e);
 
-gboolean add_icon(Window id);
-gboolean reparent_icon(TrayWindow *traywin);
-gboolean embed_icon(TrayWindow *traywin);
-void remove_icon(TrayWindow *traywin, bool destroyed);
+bool add_icon(Window id);
+bool reparent_icon(TrayWindow *pTrayWin);
+bool embed_icon(TrayWindow *pTrayWin);
+void remove_icon(TrayWindow *pTrayWin, bool destroyed);
 
 void refresh_systray_icons();
 void systray_render_icon(void *t);
-void systray_resize_request_event(TrayWindow *traywin, XEvent *e);
-void systray_reconfigure_event(TrayWindow *traywin, XEvent *e);
-void systray_property_notify(TrayWindow *traywin, XEvent *e);
-void systray_destroy_event(TrayWindow *traywin);
+void systray_resize_request_event(TrayWindow *pTrayWin, XEvent *e);
+void systray_reconfigure_event(TrayWindow *pTrayWin, XEvent *e);
+void systray_property_notify(TrayWindow *pTrayWin, XEvent *e);
+void systray_destroy_event(TrayWindow *pTrayWin);
 
 TrayWindow *systray_find_icon(Window win);
 

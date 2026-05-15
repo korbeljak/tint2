@@ -2,6 +2,7 @@
 #define GRADIENT_GUI_H
 
 #include "gui.h"
+#include <stdbool.h>
 
 int gradient_index_safe(int index);
 void init_gradient_page (GtkWidget *parent);
@@ -41,6 +42,6 @@ typedef struct GradientConfig {
 } GradientConfig;
 
 void gradient_create_new(GradientConfigType t);
-void gradient_draw(cairo_t *c, GradientConfig *g, int w, int h, gboolean preserve);
+void gradient_draw(cairo_t *c, GradientConfig *g, int w, int h, bool preserve);
 
 #endif

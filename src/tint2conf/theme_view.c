@@ -46,21 +46,21 @@ void create_view()
                                           G_TYPE_BOOLEAN);
 
     g_theme_view = gtk_tree_view_new_with_model(GTK_TREE_MODEL(theme_list_store));
-    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(g_theme_view), TRUE);
-    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(g_theme_view), FALSE);
+    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(g_theme_view), true);
+    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(g_theme_view), false);
 
     g_object_unref(theme_list_store); // destroy store automatically with view
 
     renderer = gtk_cell_renderer_text_new();
     col = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start(col, renderer, TRUE);
+    gtk_tree_view_column_pack_start(col, renderer, true);
     gtk_tree_view_column_add_attribute(col, renderer, "text", COL_THEME_FILE);
-    gtk_tree_view_column_set_visible(col, FALSE);
+    gtk_tree_view_column_set_visible(col, false);
     gtk_tree_view_append_column(GTK_TREE_VIEW(g_theme_view), col);
 
     renderer = gtk_cell_renderer_text_new();
     col = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start(col, renderer, TRUE);
+    gtk_tree_view_column_pack_start(col, renderer, true);
     gtk_tree_view_column_add_attribute(col, renderer, "text", COL_THEME_NAME);
     gtk_tree_view_append_column(GTK_TREE_VIEW(g_theme_view), col);
 
@@ -68,7 +68,7 @@ void create_view()
     g_object_set(g_renderer, "xalign", 0.0, NULL);
     gtk_cell_renderer_set_fixed_size(g_renderer, 200, 30);
     col = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start(col, g_renderer, TRUE);
+    gtk_tree_view_column_pack_start(col, g_renderer, true);
     gtk_tree_view_column_add_attribute(col, g_renderer, "pixbuf", COL_SNAPSHOT);
     gtk_tree_view_column_add_attribute(col, g_renderer, "width", COL_WIDTH);
     gtk_tree_view_column_add_attribute(col, g_renderer, "height", COL_HEIGHT);
@@ -86,8 +86,8 @@ gint theme_name_compare(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpo
     gtk_tree_model_get(model, b, COL_THEME_FILE, &path_b, -1);
 
     fetch_user_config_dir ();
-    gboolean home_a = strncmp (path_a, user_config_dir, user_config_dir_len) == 0;
-    gboolean home_b = strncmp (path_b, user_config_dir, user_config_dir_len) == 0;
+    bool home_a = strncmp (path_a, user_config_dir, user_config_dir_len) == 0;
+    bool home_b = strncmp (path_b, user_config_dir, user_config_dir_len) == 0;
 
     if (home_a && !home_b)
         return -1;
@@ -116,24 +116,24 @@ gint theme_name_compare(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpo
     return result;
 }
 
-gboolean theme_list_contains(const char *given_path)
+bool theme_list_contains(const char *given_path)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
     GtkTreeIter iter;
 
-    gboolean have_iter = gtk_tree_model_get_iter_first(model, &iter);
+    bool have_iter = gtk_tree_model_get_iter_first(model, &iter);
     while (have_iter) {
         gchar *filepath;
         gtk_tree_model_get(model, &iter, COL_THEME_FILE, &filepath, -1);
         if (g_str_equal(filepath, given_path)) {
             gtk_list_store_set(theme_list_store, &iter, COL_SNAPSHOT, NULL, -1);
             g_free(filepath);
-            return TRUE;
+            return true;
         }
         g_free(filepath);
         have_iter = gtk_tree_model_iter_next(model, &iter);
     }
-    return FALSE;
+    return false;
 }
 
 void theme_list_append(const gchar *path)
@@ -161,7 +161,7 @@ void theme_list_append(const gchar *path)
     gtk_list_store_set(theme_list_store, &iter,
                        COL_THEME_FILE,      path,
                        COL_THEME_NAME,      display_name,
-                       COL_FORCE_REFRESH,   FALSE,
+                       COL_FORCE_REFRESH,   false,
                        -1);
     g_free(display_name);
     g_free(suffix);
@@ -178,10 +178,10 @@ gboolean update_snapshot(gpointer ignored)
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
 
     GtkTreeIter iter;
-    gboolean have_iter;
+    bool have_iter;
 
     int num_updates = 0;
-    gboolean need_pls_wait = FALSE;
+    bool need_pls_wait = false;
 
     gchar *snap = NULL, *snap_name = NULL;
 
@@ -196,7 +196,7 @@ gboolean update_snapshot(gpointer ignored)
         }
 
         gchar *path;
-        gboolean force_refresh;
+        bool force_refresh;
         gtk_tree_model_get(model, &iter, COL_THEME_FILE, &path, COL_FORCE_REFRESH, &force_refresh, -1);
 
         if (!snap) {
@@ -218,7 +218,7 @@ gboolean update_snapshot(gpointer ignored)
             gchar *cmd = g_strdup_printf("tint2 -c \'%s\' -s \'%s\' 1>/dev/null 2>/dev/null", path, snap);
             num_updates++;
             if (num_updates > 3 && !need_pls_wait) {
-                need_pls_wait = TRUE;
+                need_pls_wait = true;
                 create_please_wait(GTK_WINDOW(g_window));
             }
             if (system(cmd) == 0) {
@@ -234,7 +234,7 @@ gboolean update_snapshot(gpointer ignored)
                            COL_SNAPSHOT,        pixbuf,
                            COL_WIDTH,           gdk_pixbuf_get_width(pixbuf) + PADDING,
                            COL_HEIGHT,          gdk_pixbuf_get_height(pixbuf) + PADDING,
-                           COL_FORCE_REFRESH,   FALSE,
+                           COL_FORCE_REFRESH,   false,
                            -1);
         if (pixbuf)
             g_object_unref(pixbuf);
@@ -250,5 +250,5 @@ gboolean update_snapshot(gpointer ignored)
     if (need_pls_wait)
         destroy_please_wait();
 
-    return FALSE;
+    return false;
 }

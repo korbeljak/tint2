@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "drag_and_drop.h"
 #include "panel.h"
@@ -24,7 +25,7 @@
 #include "task.h"
 #include "window.h"
 
-gboolean tint2_handles_click(Panel *panel, XButtonEvent *e)
+bool tint2_handles_click(Panel *panel, XButtonEvent *e)
 {
     if (click_task(panel, e->x, e->y))
         switch (e->button) {
@@ -33,13 +34,13 @@ gboolean tint2_handles_click(Panel *panel, XButtonEvent *e)
         case 3: return !!mouse_right;
         case 4: return !!mouse_scroll_up;
         case 5: return !!mouse_scroll_down;
-        default: return FALSE;
+        default: return false;
         }
     if (click_launcher_icon(panel, e->x, e->y))
         return (e->button == 1);
     // no launcher/task clicked --> check if taskbar clicked
     if (click_taskbar(panel, e->x, e->y) && e->button == 1 && taskbar_mode == MULTI_DESKTOP)
-        return TRUE;
+        return true;
     if (click_clock(panel, e->x, e->y))
         switch (e->button) {
         case 1: return !!clock_lclick_command;
@@ -47,7 +48,7 @@ gboolean tint2_handles_click(Panel *panel, XButtonEvent *e)
         case 3: return !!clock_rclick_command;
         case 4: return !!clock_uwheel_command;
         case 5: return !!clock_dwheel_command;
-        default: return FALSE;
+        default: return false;
         }
 #ifdef ENABLE_BATTERY
     if (click_battery(panel, e->x, e->y))
@@ -57,7 +58,7 @@ gboolean tint2_handles_click(Panel *panel, XButtonEvent *e)
         case 3: return !!battery_rclick_command;
         case 4: return !!battery_uwheel_command;
         case 5: return !!battery_dwheel_command;
-        default: return FALSE;
+        default: return false;
         }
 #endif
     return
@@ -106,9 +107,9 @@ void handle_mouse_move_event(XEvent *e)
                 gpointer temp = task_iter->data;
                 task_iter->data = drag_iter->data;
                 drag_iter->data = temp;
-                event_taskbar->area.resize_needed = TRUE;
+                event_taskbar->area.resize_needed = true;
                 schedule_panel_redraw();
-                task_dragged = TRUE;
+                task_dragged = true;
             }
         }
     } else { // The event is on another taskbar than the task being dragged
@@ -134,11 +135,11 @@ void handle_mouse_move_event(XEvent *e)
         if (taskbar_sort_method != TASKBAR_NOSORT)
             sort_tasks(event_taskbar);
 
-        event_taskbar->area.resize_needed = TRUE;
-        drag_taskbar->area.resize_needed = TRUE;
-        task_dragged = TRUE;
+        event_taskbar->area.resize_needed = true;
+        drag_taskbar->area.resize_needed = true;
+        task_dragged = true;
         schedule_panel_redraw();
-        panel->area.resize_needed = TRUE;
+        panel->area.resize_needed = true;
     }
 }
 
@@ -233,17 +234,17 @@ void handle_mouse_release_event(XEvent *e)
     // drag and drop task
     if (task_dragged) {
         task_drag = NULL;
-        task_dragged = FALSE;
+        task_dragged = false;
         return;
     }
 
     // switch desktop
     if (taskbar_mode == MULTI_DESKTOP) {
-        gboolean diff_desktop = FALSE;
+        bool diff_desktop = false;
         if (taskbar->desktop != server.desktop &&
             action != CLOSE && action != DESKTOP_LEFT && action != DESKTOP_RIGHT)
         {
-            diff_desktop = TRUE;
+            diff_desktop = true;
         }
         Task *task = click_task(panel, e->xbutton.x, e->xbutton.y);
         if (task) {

@@ -81,12 +81,12 @@ void relayout_fixed(Area *a)
     // Recalculate size
     a->_changed = CHANGE_NONE;
     if (a->resize_needed && a->size_mode == LAYOUT_FIXED) {
-        a->resize_needed = FALSE;
+        a->resize_needed = false;
 
         if (a->_resize && a->_resize(a)) {
             // The size has changed => resize needed for the parent
             if (a->parent)
-                ((Area *)a->parent)->resize_needed = TRUE;
+                ((Area *)a->parent)->resize_needed = true;
             a->_changed |= CHANGE_RESIZE;
         }
     }
@@ -101,7 +101,7 @@ void relayout_dynamic(Area *a)
 
     // Area is resized before its children
     if (a->resize_needed && a->size_mode == LAYOUT_DYNAMIC) {
-        a->resize_needed = FALSE;
+        a->resize_needed = false;
 
         if (a->_resize) {
             if (a->_resize(a))
@@ -111,7 +111,7 @@ void relayout_dynamic(Area *a)
             {
                 Area *child = l->data;
                 if (child->size_mode == LAYOUT_DYNAMIC && child->children)
-                    child->resize_needed = TRUE;
+                    child->resize_needed = true;
             }
         }
     }
@@ -220,7 +220,7 @@ void relayout_dynamic(Area *a)
 
     if (a->_changed) {
         // pos/size changed
-        a->_redraw_needed = TRUE;
+        a->_redraw_needed = true;
         if (a->_on_change_layout)
             a->_on_change_layout(a);
     }
@@ -374,7 +374,7 @@ int relayout_with_constraint(Area *a, int maximum_size)
 
 void schedule_redraw(Area *a)
 {
-    a->_redraw_needed = TRUE;
+    a->_redraw_needed = true;
 
     for_children(a, l, GList *)
         schedule_redraw(l->data);
@@ -387,7 +387,7 @@ void draw_tree(Area *a)
         return;
 
     if (a->_redraw_needed) {
-        a->_redraw_needed = FALSE;
+        a->_redraw_needed = false;
         draw(a);
     }
 
@@ -421,7 +421,7 @@ void hide(Area *a)
     if (!a->on_screen)
         return;
 
-    a->on_screen = FALSE;
+    a->on_screen = false;
     if (panel_horizontal)
         a->width = 0;
     else
@@ -430,7 +430,7 @@ void hide(Area *a)
 
     Area *parent = a->parent;
     if (parent)
-        parent->resize_needed = TRUE;
+        parent->resize_needed = true;
 }
 
 void show(Area *a)
@@ -438,12 +438,12 @@ void show(Area *a)
     if (a->on_screen)
         return;
 
-    a->on_screen = TRUE;
-    a->resize_needed = TRUE;
+    a->on_screen = true;
+    a->resize_needed = true;
 
     Area *parent = a->parent;
     if (parent)
-        parent->resize_needed = TRUE;
+        parent->resize_needed = true;
 
     schedule_panel_redraw();
 }
@@ -699,7 +699,7 @@ void remove_area(Area *a)
 
     if (parent) {
         parent->children = g_list_remove(parent->children, area);
-        parent->resize_needed = TRUE;
+        parent->resize_needed = true;
         schedule_panel_redraw();
         schedule_redraw(parent);
     }
@@ -715,7 +715,7 @@ void add_area(Area *a, Area *parent)
     a->parent = parent;
     if (parent) {
         parent->children = g_list_append(parent->children, a);
-        parent->resize_needed = TRUE;
+        parent->resize_needed = true;
         schedule_redraw(parent);
     }
 }
@@ -739,7 +739,7 @@ void free_area(Area *a)
     area_gradients_free(a);
 }
 
-void mouse_over(Area *area, gboolean pressed)
+void mouse_over(Area *area, bool pressed)
 {
     MouseState new_state;
     if (!area)
@@ -761,7 +761,7 @@ void mouse_over(Area *area, gboolean pressed)
 
         mouse_over_area->mouse_state = new_state;
         mouse_over_area->pix = mouse_over_area->pix_by_state [mouse_over_area->mouse_state];
-        mouse_over_area->_redraw_needed = TRUE;
+        mouse_over_area->_redraw_needed = true;
         schedule_panel_redraw ();
     }
 }
@@ -772,17 +772,17 @@ void mouse_out()
     {
         mouse_over_area->mouse_state = MOUSE_NORMAL;
         mouse_over_area->pix = mouse_over_area->pix_by_state [mouse_over_area->mouse_state];
-        mouse_over_area->_redraw_needed = TRUE;
+        mouse_over_area->_redraw_needed = true;
         schedule_panel_redraw ();
         mouse_over_area = NULL;
     }
 }
 
-gboolean area_is_end(void *obj, gboolean first)
+bool area_is_end(void *obj, bool first)
 {
     Area *a = obj;
     if (!a->on_screen)
-        return FALSE;
+        return false;
 
     Panel *panel = a->panel;
 
@@ -790,9 +790,9 @@ gboolean area_is_end(void *obj, gboolean first)
     while (node)
     {
         if (!node->on_screen || node->width == 0 || node->height == 0)
-            return FALSE;
+            return false;
         if (node == a)
-            return TRUE;
+            return true;
 
         GList *l = node->children;
         node = NULL;
@@ -806,24 +806,24 @@ gboolean area_is_end(void *obj, gboolean first)
         }
     }
 
-    return FALSE;
+    return false;
 }
 
-gboolean area_is_under_mouse(void *obj, int x, int y)
+bool area_is_under_mouse(void *obj, int x, int y)
 {
     Area *a = obj;
     return  !a->on_screen || !a->width || !a->height
-                ? FALSE
+                ? false
         :   a->_is_under_mouse
                 ? a->_is_under_mouse(a, x, y)
         : (x >= a->posx) && (x <= a->posx + a->width) && (y >= a->posy) && (y <= a->posy + a->height);
 }
 
-gboolean full_width_area_is_under_mouse(void *obj, int x, int y)
+bool full_width_area_is_under_mouse(void *obj, int x, int y)
 {
     Area *a = obj;
     return  !a->on_screen
-                ? FALSE
+                ? false
         :   a->_is_under_mouse && a->_is_under_mouse != full_width_area_is_under_mouse
                 ? a->_is_under_mouse(a, x, y)
         :   panel_horizontal ? (x >= a->posx) && (x <= a->posx + a->width)
@@ -1004,7 +1004,7 @@ void area_get_text_geometry(Area *area,
                         PANGO_WRAP_WORD_CHAR,
                         PANGO_ELLIPSIZE_NONE,
                         PANGO_ALIGN_CENTER,
-                        FALSE,
+                        false,
                         ((Panel*)area->panel)->scale );
     else
         *line1_width = *line1_height = 0;
@@ -1020,7 +1020,7 @@ void area_get_text_geometry(Area *area,
                         PANGO_WRAP_WORD_CHAR,
                         PANGO_ELLIPSIZE_NONE,
                         PANGO_ALIGN_CENTER,
-                        FALSE,
+                        false,
                         ((Panel*)area->panel)->scale );
     else
         *line2_width = *line2_height = 0;
@@ -1048,7 +1048,7 @@ int text_area_get_desired_size( Area *area,
                             : line1_height + line2_height   + 2 * area->paddingy * scale + top_bottom_border_width(area);
 }
 
-gboolean resize_text_area(Area *area,
+bool resize_text_area(Area *area,
                           const char *line1,
                           const char *line2,
                           PangoFontDescription *line1_font_desc,
@@ -1056,7 +1056,7 @@ gboolean resize_text_area(Area *area,
                           int *line1_posy,
                           int *line2_posy)
 {
-    gboolean result = FALSE;
+    bool result = false;
 
     schedule_redraw(area);
 
@@ -1089,7 +1089,7 @@ gboolean resize_text_area(Area *area,
                 *line1_posy -= (line2_height) / 2;
                 *line2_posy = *line1_posy + line1_height;
             }
-            result = TRUE;
+            result = true;
         }
     } else {
         if (new_size != area->height)
@@ -1100,7 +1100,7 @@ gboolean resize_text_area(Area *area,
                 *line1_posy -= (line2_height) / 2;
                 *line2_posy = *line1_posy + line1_height;
             }
-            result = TRUE;
+            result = true;
         }
     }
 
@@ -1151,7 +1151,7 @@ void draw_text_area(Area *area,
     g_object_unref(context);
 }
 
-gboolean gradient_point_area_dependent(ControlPoint *control)
+bool gradient_point_area_dependent(ControlPoint *control)
 {
     return ((control->offsets_x && !CONST_OFFSET( control->offsets_x)) ||
             (control->offsets_y && !CONST_OFFSET( control->offsets_y)) ||

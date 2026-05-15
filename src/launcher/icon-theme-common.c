@@ -30,7 +30,7 @@
 #include "cache.h"
 #include "test.h"
 
-gboolean debug_icons = FALSE;
+bool debug_icons = false;
 char *icon_cache_path = NULL;
 
 #define ICON_DIR_TYPE_SCALABLE 0
@@ -429,7 +429,7 @@ void load_default_theme(IconThemeWrapper *wrapper)
     load_themes_helper("hicolor",                &wrapper->themes, &wrapper->_queued);
     fputs( RESET "\n", stderr);
 
-    wrapper->_themes_loaded = TRUE;
+    wrapper->_themes_loaded = true;
 }
 
 void load_fallbacks(IconThemeWrapper *wrapper)
@@ -458,7 +458,7 @@ void load_fallbacks(IconThemeWrapper *wrapper)
     }
 
     fputs( RESET "\n", stderr);
-    wrapper->_fallback_loaded = TRUE;
+    wrapper->_fallback_loaded = true;
 }
 
 gchar *get_icon_cache_path()
@@ -775,7 +775,7 @@ void add_icon_path_to_cache(IconThemeWrapper *wrapper, const char *icon_name, in
     free( key);
 }
 
-char *get_icon_path(IconThemeWrapper *wrapper, const char *icon_name, int size, gboolean use_fallbacks)
+char *get_icon_path(IconThemeWrapper *wrapper, const char *icon_name, int size, bool use_fallbacks)
 {
     if (debug_icons)
         fprintf(stderr,

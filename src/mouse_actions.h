@@ -2,8 +2,9 @@
 #define MOUSE_ACTIONS_H
 
 #include "panel.h"
+#include <stdbool.h>
 
-gboolean tint2_handles_click(Panel *panel, XButtonEvent *e);
+bool tint2_handles_click(Panel *panel, XButtonEvent *e);
 
 void handle_mouse_press_event(XEvent *e);
 void handle_mouse_move_event(XEvent *e);

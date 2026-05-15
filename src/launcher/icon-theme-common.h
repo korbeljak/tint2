@@ -7,14 +7,15 @@
 #define ICON_THEME_COMMON_H
 
 #include <glib.h>
+#include <stdbool.h>
 #include "cache.h"
 
 typedef struct IconThemeWrapper {
     char     *icon_theme_name;  // The icon theme name for which this wrapper was created
     GSList   *themes;           // List of IconThemes
-    gboolean _themes_loaded;    // Themes are loaded lazily when needed.
+    bool _themes_loaded;    // Themes are loaded lazily when needed.
     GSList   *themes_fallback;  // List of IconTheme*
-    gboolean _fallback_loaded;  // Fallback themes are loaded lazily when needed.
+    bool _fallback_loaded;  // Fallback themes are loaded lazily when needed.
     Cache _cache;
 
     GSList *_queued;    // List of icon theme names that have been queued for loading.
@@ -44,7 +45,7 @@ void free_icon_theme(IconTheme *theme);
 
 #define DEFAULT_ICON "application-x-executable"
 
-char *get_icon_path(IconThemeWrapper *wrapper, const char *icon_name, int size, gboolean use_fallbacks);
+char *get_icon_path(IconThemeWrapper *wrapper, const char *icon_name, int size, bool use_fallbacks);
 // Returns the full path to an icon file (or NULL) given the list of icon themes to search and the icon name
 // Note: needs to be released with free().
 
@@ -55,7 +56,7 @@ const GSList *get_icon_locations();
 
 void icon_theme_common_cleanup();
 
-extern gboolean debug_icons;
+extern bool debug_icons;
 
 extern char *icon_cache_path;
 

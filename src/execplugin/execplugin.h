@@ -2,6 +2,7 @@
 #define EXECPLUGIN_H
 
 #include <sys/time.h>
+#include <stdbool.h>
 #include <pango/pangocairo.h>
 
 #include "area.h"
@@ -24,19 +25,19 @@ typedef struct ExecpBackend {
     char *command;  // Command to execute at a specified interval
     int interval;   // Interval in seconds
     int monitor;
-    gboolean has_icon;  // 1 if first line of output is an icon path
-    gboolean cache_icon;
+    bool has_icon;  // 1 if first line of output is an icon path
+    bool cache_icon;
     int icon_w;
     int icon_h;
-    gboolean has_user_tooltip;
+    bool has_user_tooltip;
     char *tooltip;
     size_t tooltip_len;
-    gboolean centered;
-    gboolean has_font;
+    bool centered;
+    bool has_font;
     PangoFontDescription *font_desc;
     Color font_color;
     int continuous;
-    gboolean has_markup;
+    bool has_markup;
     char *lclick_command;
     char *mclick_command;
     char *rclick_command;
@@ -135,7 +136,7 @@ void cleanup_execp();
 void draw_execp(void *obj, cairo_t *c);
 // Called on draw, obj = pointer to the front-end Execp item.
 
-gboolean resize_execp(void *obj);
+bool resize_execp(void *obj);
 // Called on resize, obj = pointer to the front-end Execp item.
 // Returns 1 if the new size is different than the previous size.
 
@@ -144,7 +145,7 @@ void execp_action(void *obj, int button, int x, int y, Time time);
 
 void execp_cmd_completed(Execp *obj, pid_t pid);
 
-gboolean read_execp(void *obj);
+bool read_execp(void *obj);
 // Called to check if new output from the command can be read.
 // No command might be running.
 // Returns 1 if the output has been updated and a redraw is needed.

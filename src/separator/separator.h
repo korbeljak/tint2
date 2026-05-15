@@ -22,7 +22,7 @@ void destroy_separator(void *obj);
 void init_separator();
 void init_separator_panel(void *p);
 void cleanup_separator();
-gboolean resize_separator(void *obj);
+bool resize_separator(void *obj);
 void draw_separator(void *obj, cairo_t *c);
 
 #endif

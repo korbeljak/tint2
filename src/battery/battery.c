@@ -20,6 +20,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <pango/pangocairo.h>
@@ -32,15 +33,15 @@
 #include "timer.h"
 #include "common.h"
 
-gboolean bat1_has_font;
+bool bat1_has_font;
 PangoFontDescription *bat1_font_desc;
-gboolean bat2_has_font;
+bool bat2_has_font;
 PangoFontDescription *bat2_font_desc;
 char *bat1_format;
 char *bat2_format;
 struct BatteryState battery_state;
-gboolean battery_enabled;
-gboolean battery_tooltip_enabled;
+bool battery_enabled;
+bool battery_tooltip_enabled;
 int percentage_hide;
 static Timer battery_timer;
 static Timer battery_blink_timer;
@@ -50,8 +51,8 @@ static char buf_bat_line1[BATTERY_BUF_SIZE];
 static char buf_bat_line2[BATTERY_BUF_SIZE];
 
 int8_t battery_low_status;
-gboolean battery_low_cmd_sent;
-gboolean battery_full_cmd_sent;
+bool battery_low_cmd_sent;
+bool battery_full_cmd_sent;
 char *ac_connected_cmd;
 char *ac_disconnected_cmd;
 char *battery_low_cmd;
@@ -66,9 +67,9 @@ int battery_mclick_command_sink;
 int battery_rclick_command_sink;
 int battery_uwheel_command_sink;
 int battery_dwheel_command_sink;
-gboolean battery_found;
-gboolean battery_warn;
-gboolean battery_warn_red;
+bool battery_found;
+bool battery_warn;
+bool battery_warn_red;
 
 char *battery_sys_prefix = (char *)"";
 
@@ -79,20 +80,20 @@ void battery_dump_geometry(void *obj, int indent);
 
 void default_battery()
 {
-    battery_enabled = FALSE;
-    battery_tooltip_enabled = TRUE;
-    battery_found = FALSE;
+    battery_enabled = false;
+    battery_tooltip_enabled = true;
+    battery_found = false;
     percentage_hide = 101;
-    battery_low_cmd_sent = FALSE;
-    battery_full_cmd_sent = FALSE;
+    battery_low_cmd_sent = false;
+    battery_full_cmd_sent = false;
     INIT_TIMER(battery_timer);
     INIT_TIMER(battery_blink_timer);
-    battery_warn = FALSE;
-    battery_warn_red = FALSE;
-    bat1_has_font = FALSE;
+    battery_warn = false;
+    battery_warn_red = false;
+    bat1_has_font = false;
     bat1_font_desc = NULL;
     bat1_format = NULL;
-    bat2_has_font = FALSE;
+    bat2_has_font = false;
     bat2_font_desc = NULL;
     bat2_format = NULL;
     ac_connected_cmd = NULL;
@@ -132,7 +133,7 @@ void cleanup_battery()
     free_and_null(ac_disconnected_cmd);
     destroy_timer(&battery_timer);
     destroy_timer(&battery_blink_timer);
-    battery_found = FALSE;
+    battery_found = false;
 
     battery_os_free();
 }
@@ -266,8 +267,8 @@ void init_battery_panel(void *p)
     battery->area._resize = resize_battery;
     battery->area._get_desired_size = battery_get_desired_size;
     battery->area._is_under_mouse = full_width_area_is_under_mouse;
-    battery->area.on_screen = TRUE;
-    battery->area.resize_needed = TRUE;
+    battery->area.on_screen = true;
+    battery->area.resize_needed = true;
     battery->area.has_mouse_over_effect =
         panel_config.mouse_effects && (battery_lclick_command || battery_mclick_command || battery_rclick_command ||
                                        battery_uwheel_command || battery_dwheel_command);
@@ -311,7 +312,7 @@ void battery_default_font_changed()
     }
     battery_init_fonts();
     for (int i = 0; i < num_panels; i++) {
-        panels[i].battery.area.resize_needed = TRUE;
+        panels[i].battery.area.resize_needed = true;
         schedule_redraw(&panels[i].battery.area);
     }
     schedule_panel_redraw();
@@ -321,7 +322,7 @@ void blink_battery(void *arg)
 {
     if (!battery_enabled)
         return;
-    battery_warn_red = battery_warn ? !battery_warn_red : FALSE;
+    battery_warn_red = battery_warn ? !battery_warn_red : false;
     for (int i = 0; i < num_panels; i++) {
         if (panels[i].battery.area.on_screen) {
             schedule_redraw(&panels[i].battery.area);
@@ -334,12 +335,12 @@ void update_battery_tick(void *arg)
     if (!battery_enabled)
         return;
 
-    gboolean old_found = battery_found;
+    bool old_found = battery_found;
     int old_percentage = battery_state.percentage;
-    gboolean old_ac_connected = battery_state.ac_connected;
+    bool old_ac_connected = battery_state.ac_connected;
     int16_t old_hours = battery_state.time.hours;
     int8_t old_minutes = battery_state.time.minutes;
-    gboolean old_warn = battery_warn;
+    bool old_warn = battery_warn;
 
     if (!battery_found) {
         init_battery();
@@ -360,34 +361,34 @@ void update_battery_tick(void *arg)
     if (battery_state.percentage < battery_low_status && battery_state.state == BATTERY_DISCHARGING &&
         !battery_low_cmd_sent) {
         tint_exec_no_sn(battery_low_cmd);
-        battery_low_cmd_sent = TRUE;
+        battery_low_cmd_sent = true;
     }
     if (battery_state.percentage > battery_low_status && battery_state.state == BATTERY_CHARGING &&
         battery_low_cmd_sent) {
-        battery_low_cmd_sent = FALSE;
+        battery_low_cmd_sent = false;
     }
 
     if ((battery_state.percentage >= 100 || battery_state.state == BATTERY_FULL) &&
         !battery_full_cmd_sent) {
         tint_exec_no_sn(battery_full_cmd);
-        battery_full_cmd_sent = TRUE;
+        battery_full_cmd_sent = true;
     }
     if (battery_state.percentage < 100 && battery_state.state != BATTERY_FULL &&
         battery_full_cmd_sent) {
-        battery_full_cmd_sent = FALSE;
+        battery_full_cmd_sent = false;
     }
 
     if (!battery_blink_timer.enabled_) {
         if ((battery_state.percentage < battery_low_status &&
             battery_state.state == BATTERY_DISCHARGING) || debug_blink) {
             change_timer(&battery_blink_timer, true, 10, 1000, blink_battery, 0);
-            battery_warn = TRUE;
+            battery_warn = true;
         }
     } else {
         if (battery_state.percentage > battery_low_status ||
             battery_state.state != BATTERY_DISCHARGING) {
             stop_timer(&battery_blink_timer);
-            battery_warn = FALSE;
+            battery_warn = false;
         }
     }
 
@@ -406,7 +407,7 @@ void update_battery_tick(void *arg)
             if (old_found != battery_found || old_percentage != battery_state.percentage ||
                 old_hours != battery_state.time.hours || old_minutes != battery_state.time.minutes ||
                 old_warn != battery_warn) {
-                panels[i].battery.area.resize_needed = TRUE;
+                panels[i].battery.area.resize_needed = true;
                 if (!battery_warn)
                     panels[i].battery.area.bg = panel_config.battery.area.bg;
                 schedule_panel_redraw();
@@ -421,7 +422,7 @@ int update_battery()
     // Reset
     battery_state.state = BATTERY_UNKNOWN;
     battery_state.percentage = 0;
-    battery_state.ac_connected = FALSE;
+    battery_state.ac_connected = false;
     battery_state_set_time(&battery_state, 0);
 
     int err = battery_os_update(&battery_state);
@@ -445,7 +446,7 @@ int battery_get_desired_size(void *obj)
     return text_area_get_desired_size(&battery->area, buf_bat_line1, buf_bat_line2, bat1_font_desc, bat2_font_desc);
 }
 
-gboolean resize_battery(void *obj)
+bool resize_battery(void *obj)
 {
     Battery *battery = obj;
     return resize_text_area(&battery->area,
@@ -501,6 +502,6 @@ void battery_action(void *obj, int button, int x, int y, Time time)
             battery_uwheel_command, // 4
             battery_dwheel_command // 5
         };
-        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, FALSE, TRUE);
+        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, false, true);
     }
 }

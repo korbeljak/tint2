@@ -3,6 +3,7 @@
 
 #include <glib.h>
 #include <cairo.h>
+#include <stdbool.h>
 
 #include "color.h"
 
@@ -72,6 +73,6 @@ typedef struct GradientInstance {
     cairo_pattern_t *pattern;
 } GradientInstance;
 
-extern gboolean debug_gradients;
+extern bool debug_gradients;
 
 #endif // GRADIENT_H

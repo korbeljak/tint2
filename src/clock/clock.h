@@ -10,6 +10,7 @@
 #define CLOCK_H
 
 #include <sys/time.h>
+#include <stdbool.h>
 #include "common.h"
 #include "area.h"
 
@@ -26,16 +27,16 @@ extern char *time2_format;
 extern char *time2_timezone;
 extern char *time_tooltip_format;
 extern char *time_tooltip_timezone;
-extern gboolean time1_has_font;
+extern bool time1_has_font;
 extern PangoFontDescription *time1_font_desc;
-extern gboolean time2_has_font;
+extern bool time2_has_font;
 extern PangoFontDescription *time2_font_desc;
 extern char *clock_lclick_command;
 extern char *clock_mclick_command;
 extern char *clock_rclick_command;
 extern char *clock_uwheel_command;
 extern char *clock_dwheel_command;
-extern gboolean clock_enabled;
+extern bool clock_enabled;
 
 void default_clock();
 // default global data
@@ -51,7 +52,7 @@ void clock_default_font_changed();
 
 void draw_clock(void *obj, cairo_t *c);
 
-gboolean resize_clock(void *obj);
+bool resize_clock(void *obj);
 
 void clock_action(void *obj, int button, int x, int y, Time time);
 

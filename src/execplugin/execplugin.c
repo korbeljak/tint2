@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <cairo.h>
+#include <stdbool.h>
 #include <cairo-xlib.h>
 #include <math.h>
 #include <pango/pangocairo.h>
@@ -47,8 +48,8 @@ Execp *create_execp()
     backend->cmd_pids = g_tree_new(cmp_ptr);
     backend->interval = 30;
     backend->icon_path = NULL;
-    backend->cache_icon = TRUE;
-    backend->centered = TRUE;
+    backend->cache_icon = true;
+    backend->centered = true;
     backend->font_color.alpha = 0.5;
     backend->monitor = -1;
     INIT_TIMER(backend->timer);
@@ -231,8 +232,8 @@ void init_execp_panel(void *p)
                                                  backend->rclick_command || backend->uwheel_command ||
                                                  backend->dwheel_command);
 
-        execp->area.resize_needed = TRUE;
-        execp->area.on_screen = TRUE;
+        execp->area.resize_needed = true;
+        execp->area.on_screen = true;
         area_gradients_create(&execp->area);
 
         change_timer(&backend->timer, true, 10, 0, execp_timer_callback, execp);
@@ -252,7 +253,7 @@ void execp_init_fonts()
 
 void execp_default_font_changed()
 {
-    gboolean needs_update = FALSE;
+    bool needs_update = false;
     for (GList *l = panel_config.execp_list; l; l = l->next) {
         Execp *execp = l->data;
         ExecpBackend * backend = execp->backend;
@@ -260,7 +261,7 @@ void execp_default_font_changed()
         if (!backend->has_font) {
             pango_font_description_free(backend->font_desc);
             backend->font_desc = NULL;
-            needs_update = TRUE;
+            needs_update = true;
         }
     }
     if (!needs_update)
@@ -273,7 +274,7 @@ void execp_default_font_changed()
             Execp *execp = l->data;
 
             if (!execp->backend->has_font) {
-                execp->area.resize_needed = TRUE;
+                execp->area.resize_needed = true;
                 schedule_redraw(&execp->area);
             }
         }
@@ -299,7 +300,7 @@ void cleanup_execp()
 }
 
 // Called from backend functions.
-gboolean reload_icon(Execp *execp)
+bool reload_icon(Execp *execp)
 {
     ExecpBackend * backend = execp->backend;
     char *icon_path = backend->icon_path;
@@ -335,10 +336,10 @@ gboolean reload_icon(Execp *execp)
                 backend->icon = imlib_create_cropped_scaled_image(0, 0, ow, oh, w, h);
                 imlib_free_image();
             }
-            return TRUE;
+            return true;
         }
     }
-    return FALSE;
+    return false;
 }
 
 void execp_get_icon_text_geometry(Execp *execp,
@@ -347,14 +348,14 @@ void execp_get_icon_text_geometry(Execp *execp,
                                       int *interior_padding,
                                       int *icon_w,
                                       int *icon_h,
-                                      gboolean *text_next_line,
+                                      bool *text_next_line,
                                       int *txt_height,
                                       int *txt_width,
                                       int *new_size,
-                                      gboolean *resized)
+                                      bool *resized)
 {
     int _icon_w, _icon_h, _vpad, _hpad, _inpad, _txt_width, _txt_height, _new_size, border_lr;
-    gboolean _text_next_line, _resized;
+    bool _text_next_line, _resized;
     ExecpBackend * backend = execp->backend;
     Panel *panel = execp->area.panel;
     Area *area = &execp->area;
@@ -413,7 +414,7 @@ void execp_get_icon_text_geometry(Execp *execp,
         if (_new_size < area->width && area->width - _new_size < 6) {
             // trying to limit the number of resizes
             _new_size = area->width;
-            _resized = TRUE;
+            _resized = true;
         } else
             _resized = _new_size != area->width;
     } else {
@@ -451,10 +452,10 @@ int execp_get_desired_size(void *obj)
     Execp *execp = obj;
     int horiz_padding, vert_padding, interior_padding;
     int icon_w, icon_h;
-    gboolean text_next_line;
+    bool text_next_line;
     int txt_height, txt_width;
     int new_size;
-    gboolean resized;
+    bool resized;
     execp_get_icon_text_geometry(execp,
                                      &horiz_padding,
                                      &vert_padding,
@@ -470,7 +471,7 @@ int execp_get_desired_size(void *obj)
     return new_size;
 }
 
-gboolean resize_execp(void *obj)
+bool resize_execp(void *obj)
 {
     Execp *execp = obj;
     ExecpBackend * backend = execp->backend;
@@ -478,10 +479,10 @@ gboolean resize_execp(void *obj)
     
     int horiz_padding, vert_padding, interior_padding;
     int icon_w, icon_h;
-    gboolean text_next_line;
+    bool text_next_line;
     int txt_height, txt_width;
     int new_size;
-    gboolean resized;
+    bool resized;
     execp_get_icon_text_geometry(execp,
                                      &horiz_padding,
                                      &vert_padding,
@@ -703,7 +704,7 @@ void execp_action(void *obj, int button, int x, int y, Time time)
                 setenvd("EXECP_Y", y);
                 setenvd("EXECP_W", execp->area.width);
                 setenvd("EXECP_H", execp->area.height);
-                pid_t pid = tint_exec(command, NULL, NULL, time, obj, x, y, FALSE, TRUE);
+                pid_t pid = tint_exec(command, NULL, NULL, time, obj, x, y, false, true);
                 unsetenv("EXECP_X");
                 unsetenv("EXECP_Y");
                 unsetenv("EXECP_W");
@@ -835,9 +836,9 @@ e0: if (have_stdin)
         close( pipe_fd_stdin[0]);
 }
 
-int read_from_pipe(int fd, char **buffer, ssize_t *buffer_length, ssize_t *buffer_capacity, gboolean *eof)
+int read_from_pipe(int fd, char **buffer, ssize_t *buffer_length, ssize_t *buffer_capacity, bool *eof)
 {
-    *eof = FALSE;
+    *eof = false;
     ssize_t total = 0;
     while (1) {
         // Make sure there is free space in the buffer
@@ -857,13 +858,13 @@ int read_from_pipe(int fd, char **buffer, ssize_t *buffer_length, ssize_t *buffe
             continue;
         }
         else if (count == 0)
-            *eof = TRUE;            // End of file
+            *eof = true;            // End of file
         else if (errno == EAGAIN || errno == EWOULDBLOCK)
             break;                  // No more data available at the moment
         else if (errno == EINTR)
             continue;               // Harmless interruption by signal
         else
-            *eof = TRUE;            // Error
+            *eof = true;            // Error
         break;
     }
     (*buffer)[*buffer_length] = '\0';
@@ -959,15 +960,15 @@ char * printed_end(char *s)
     return p + 1;
 }
 
-gboolean read_execp(void *obj)
+bool read_execp(void *obj)
 {
     Execp *execp = obj;
     ExecpBackend * backend = execp->backend;
 
     if (backend->child_pipe_stdout < 0)
-        return FALSE;
+        return false;
 
-    gboolean stdout_eof, stderr_eof;
+    bool stdout_eof, stderr_eof;
     read_from_pipe(backend->child_pipe_stdout,
                    &backend->buf_stdout,
                    &backend->buf_stdout_length,
@@ -980,8 +981,8 @@ gboolean read_execp(void *obj)
                    &backend->buf_stderr_capacity,
                    &stderr_eof);
 
-    gboolean command_finished = stdout_eof && stderr_eof;
-    gboolean result = FALSE;
+    bool command_finished = stdout_eof && stderr_eof;
+    bool result = false;
 
     if (command_finished) {
         close(backend->child_pipe_stdout);
@@ -1014,7 +1015,7 @@ gboolean read_execp(void *obj)
                 }
                 memcpy( backend->tooltip, backend->buf_stderr, tooltip_len);
                 backend->tooltip[ tooltip_len] = '\0';
-                result = TRUE;
+                result = true;
             }
         } else {
             backend->buf_stderr_length = 0;
@@ -1069,7 +1070,7 @@ gboolean read_execp(void *obj)
             backend->last_update_finish_time = time(NULL);
             backend->last_update_duration =
                 backend->last_update_finish_time - backend->last_update_start_time;
-            result = TRUE;
+            result = true;
         }
     }
     else if (command_finished)
@@ -1110,7 +1111,7 @@ gboolean read_execp(void *obj)
         backend->last_update_finish_time = time(NULL);
         backend->last_update_duration =
             backend->last_update_finish_time - backend->last_update_start_time;
-        result = TRUE;
+        result = true;
     }
     return result;
 }
@@ -1208,7 +1209,7 @@ void execp_update_post_read(Execp *execp)
         hide(&execp->area);
     else {
         show(&execp->area);
-        execp->area.resize_needed = TRUE;
+        execp->area.resize_needed = true;
         schedule_panel_redraw();
     }
 

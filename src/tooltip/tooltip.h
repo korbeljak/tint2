@@ -32,7 +32,7 @@ typedef struct {
     Bool mapped;
     int spacing;
     int paddingy;
-    gboolean has_font;
+    bool has_font;
     PangoFontDescription *font_desc;
     Color font_color;
     Background *bg;

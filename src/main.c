@@ -67,8 +67,8 @@
 
 XSettingsClient *xsettings_client = NULL;
 
-gboolean debug_fps = FALSE;
-gboolean debug_frames = FALSE;
+bool debug_fps = false;
+bool debug_frames = false;
 static int frame = 0;
 double tracing_fps_threshold = 60;
 static double ts_event_read;
@@ -76,11 +76,11 @@ static double ts_event_processed;
 static double ts_render_finished;
 static double ts_flush_finished;
 
-static gboolean first_render;
+static bool first_render;
 
 void handle_event_property_notify(XEvent *e)
 {
-    gboolean debug = FALSE;
+    bool debug = false;
 
     Window win = e->xproperty.window;
     Atom at = e->xproperty.atom;
@@ -101,7 +101,7 @@ void handle_event_property_notify(XEvent *e)
     {
         if (!server.got_root_win) {
             XSelectInput(server.display, server.root_win, PropertyChangeMask | StructureNotifyMask);
-            server.got_root_win = TRUE;
+            server.got_root_win = true;
         }
         // Change name of desktops
         else if (at == server.atom [_NET_DESKTOP_NAMES])
@@ -137,7 +137,7 @@ void handle_event_property_notify(XEvent *e)
                 {
                     init_taskbar_panel(&panels[i]);
                     set_panel_items_order(&panels[i]);
-                    panels[i].area.resize_needed = TRUE;
+                    panels[i].area.resize_needed = true;
                 }
                 taskbar_refresh_tasklist();
                 reset_active_task();
@@ -165,9 +165,9 @@ void handle_event_property_notify(XEvent *e)
                             if (task->desktop == ALL_DESKTOPS)
                             {
                                 task->area.on_screen = always_show_all_desktop_tasks;
-                                taskbar->area.resize_needed = TRUE;
+                                taskbar->area.resize_needed = true;
                                 if (taskbar_mode == MULTI_DESKTOP)
-                                    panel->area.resize_needed = TRUE;
+                                    panel->area.resize_needed = true;
 
                                 schedule_panel_redraw();
                             }
@@ -179,10 +179,10 @@ void handle_event_property_notify(XEvent *e)
                         Task *task = l->data;
                         if (task->desktop == ALL_DESKTOPS)
                         {
-                            task->area.on_screen = TRUE;
-                            taskbar->area.resize_needed = TRUE;
+                            task->area.on_screen = true;
+                            taskbar->area.resize_needed = true;
                             if (taskbar_mode == MULTI_DESKTOP)
-                                panel->area.resize_needed = TRUE;
+                                panel->area.resize_needed = true;
                         }
                     }
                     if (server.viewports)
@@ -239,9 +239,9 @@ void handle_event_property_notify(XEvent *e)
             schedule_panel_redraw();
         }
     } else {
-        TrayWindow *traywin = systray_find_icon(win);
-        if (traywin) {
-            systray_property_notify(traywin, e);
+        TrayWindow *pTrayWin = systray_find_icon(win);
+        if (pTrayWin) {
+            systray_property_notify(pTrayWin, e);
             return;
         }
 
@@ -369,9 +369,9 @@ void handle_event_configure_notify(XEvent *e)
         return;
     }
 
-    TrayWindow *traywin = systray_find_icon(win);
-    if (traywin) {
-        systray_reconfigure_event(traywin, e);
+    TrayWindow *pTrayWin = systray_find_icon(win);
+    if (pTrayWin) {
+        systray_reconfigure_event(pTrayWin, e);
         return;
     }
 
@@ -407,7 +407,7 @@ void handle_event_configure_notify(XEvent *e)
     sort_taskbar_for_win(win);
 }
 
-gboolean handle_x_event_autohide(XEvent *e)
+bool handle_x_event_autohide(XEvent *e)
 {
     Panel *panel = get_panel(e->xany.window);
     if (panel && panel_autohide)
@@ -421,20 +421,20 @@ gboolean handle_x_event_autohide(XEvent *e)
         if (panel->is_hidden) {
             if (e->type == ClientMessage && e->xclient.message_type == server.atom [XdndPosition])
             {
-                hidden_panel_shown_for_dnd = TRUE;
+                hidden_panel_shown_for_dnd = true;
                 autohide_show(panel);
             }
             else // discard further processing of this event because the panel is not visible yet
-                return TRUE;
+                return true;
         } else
             if (hidden_panel_shown_for_dnd && e->type == ClientMessage &&
                 e->xclient.message_type == server.atom [XdndLeave])
             {
-                hidden_panel_shown_for_dnd = FALSE;
+                hidden_panel_shown_for_dnd = false;
                 autohide_hide(panel);
             }
     }
-    return FALSE;
+    return false;
 }
 
 void handle_x_event(XEvent *e)
@@ -457,14 +457,14 @@ void handle_x_event(XEvent *e)
         handle_mouse_press_event(e);
         Area *area = find_area_under_mouse(panel, e->xbutton.x, e->xbutton.y);
         if (panel_config.mouse_effects)
-            mouse_over(area, TRUE);
+            mouse_over(area, true);
         break;
     }
     case ButtonRelease: {
         handle_mouse_release_event(e);
         Area *area = find_area_under_mouse(panel, e->xbutton.x, e->xbutton.y);
         if (panel_config.mouse_effects)
-            mouse_over(area, FALSE);
+            mouse_over(area, false);
         break;
     }
     case MotionNotify: {
@@ -500,15 +500,15 @@ void handle_x_event(XEvent *e)
         break;
 
     case ConfigureRequest: {
-        TrayWindow *traywin = systray_find_icon(e->xany.window);
-        if (traywin)
-            systray_reconfigure_event(traywin, e);
+        TrayWindow *pTrayWin = systray_find_icon(e->xany.window);
+        if (pTrayWin)
+            systray_reconfigure_event(pTrayWin, e);
         break;
     }
     case ResizeRequest: {
-        TrayWindow *traywin = systray_find_icon(e->xany.window);
-        if (traywin)
-            systray_resize_request_event(traywin, e);
+        TrayWindow *pTrayWin = systray_find_icon(e->xany.window);
+        if (pTrayWin)
+            systray_resize_request_event(pTrayWin, e);
         break;
     }
     case ReparentNotify: {
@@ -517,13 +517,13 @@ void handle_x_event(XEvent *e)
         Panel *systray_panel = systray.area.panel;
         if (e->xany.window == systray_panel->main_win) // don't care
             break;
-        TrayWindow *traywin = systray_find_icon(e->xreparent.window);
-        if (traywin && traywin->win == e->xreparent.window)
+        TrayWindow *pTrayWin = systray_find_icon(e->xreparent.window);
+        if (pTrayWin && pTrayWin->win == e->xreparent.window)
         {
-            if (traywin->parent == e->xreparent.parent)
-                embed_icon(traywin);
+            if (pTrayWin->parent == e->xreparent.parent)
+                embed_icon(pTrayWin);
             else
-                remove_icon(traywin, false);
+                remove_icon(pTrayWin, false);
         }
         break;
     }
@@ -599,9 +599,9 @@ void handle_x_event(XEvent *e)
         if (e->type == server.xdamage_event_type)
         {
             XDamageNotifyEvent *de = (XDamageNotifyEvent *)e;
-            TrayWindow *traywin = systray_find_icon(de->drawable);
-            if (traywin)
-                systray_render_icon(traywin);
+            TrayWindow *pTrayWin = systray_find_icon(de->drawable);
+            if (pTrayWin)
+                systray_render_icon(pTrayWin);
         }
     }
 }
@@ -652,7 +652,7 @@ void handle_panel_refresh()
 {
     if (debug_fps)
         ts_event_processed = get_time();
-    panel_redraw = FALSE;
+    panel_redraw = false;
 
     for (int i = 0; i < num_panels; i++)
     {
@@ -706,7 +706,7 @@ void handle_panel_refresh()
                       0, 0);
             if (refresh_systray && panel == systray.area.panel && !panel->is_hidden)
             {
-                refresh_systray = FALSE;
+                refresh_systray = false;
                 XSetWindowBackgroundPixmap(server.display, panel->main_win, panel->temp_pmap);
                 refresh_systray_icons();
             }
@@ -714,7 +714,7 @@ void handle_panel_refresh()
     }
     if (first_render)
     {
-        first_render = FALSE;
+        first_render = false;
         if (panel_shrink)
             schedule_panel_redraw();
     }
@@ -769,7 +769,7 @@ void run_tint2_event_loop()
     ts_event_processed = 0;
     ts_render_finished = 0;
     ts_flush_finished = 0;
-    first_render = TRUE;
+    first_render = true;
 
     while (!get_signal_pending())
     {
@@ -825,7 +825,7 @@ void run_tint2_event_loop()
     }
 }
 
-void tint2(int argc, char **argv, gboolean *restart)
+void tint2(int argc, char **argv, bool *restart)
 {
     init(argc, argv);
 
@@ -846,7 +846,7 @@ void tint2(int argc, char **argv, gboolean *restart)
         {
             case SIGUSR1:
                 fprintf(stderr, YELLOW "tint2: %s %d: restarting tint2..." RESET "\n", __FILE__, __LINE__);
-                *restart = TRUE;
+                *restart = true;
                 return;
             case SIGUSR2:
                 fprintf(stderr, YELLOW "tint2: %s %d: reexecuting tint2..." RESET "\n", __FILE__, __LINE__);
@@ -882,8 +882,8 @@ int main(int argc, char **argv)
         fprintf(stderr, RED "tint2: %s %d: setenv failed!" RESET "\n",
                 __FILE__, __LINE__);
     }
-    gboolean restart;
-    do{ restart = FALSE;
+    bool restart;
+    do{ restart = false;
         tint2(argc, argv, &restart);
     } while(restart);
     return 0;

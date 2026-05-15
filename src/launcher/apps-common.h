@@ -8,6 +8,7 @@
 #define APPS_COMMON_H
 
 #include <glib.h>
+#include <stdbool.h>
 
 typedef struct DesktopEntry {
     char *name;
@@ -16,9 +17,9 @@ typedef struct DesktopEntry {
     char *icon;
     char *path;
     char *cwd;
-    gboolean hidden_from_menus;
-    gboolean start_in_terminal;
-    gboolean startup_notification;
+    bool hidden_from_menus;
+    bool start_in_terminal;
+    bool startup_notification;
 } DesktopEntry;
 
 int parse_dektop_line(char *line, char **key, char **value);
@@ -26,7 +27,7 @@ int parse_dektop_line(char *line, char **key, char **value);
 // Returns 1 if successful, and parts are not empty.
 // Key and value point to the parts.
 
-gboolean read_desktop_file(const char *path, DesktopEntry *entry);
+bool read_desktop_file(const char *path, DesktopEntry *entry);
 // Reads the .desktop file from the given path into the DesktopEntry entry.
 // The DesktopEntry object must be initially empty.
 // Returns 1 if successful.

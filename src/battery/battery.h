@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "area.h"
@@ -40,18 +41,18 @@ typedef struct BatteryState {
     int percentage;
     BatteryTime time;
     ChargeState state;
-    gboolean ac_connected;
+    bool ac_connected;
 } BatteryState;
 
 extern struct BatteryState battery_state;
-extern gboolean bat1_has_font;
+extern bool bat1_has_font;
 extern PangoFontDescription *bat1_font_desc;
-extern gboolean bat2_has_font;
+extern bool bat2_has_font;
 extern PangoFontDescription *bat2_font_desc;
 extern char *bat1_format;
 extern char *bat2_format;
-extern gboolean battery_enabled;
-extern gboolean battery_tooltip_enabled;
+extern bool battery_enabled;
+extern bool battery_tooltip_enabled;
 extern int percentage_hide;
 
 extern int8_t battery_low_status;
@@ -109,12 +110,12 @@ void reinit_battery();
 void draw_battery(void *obj, cairo_t *c);
 void battery_default_font_changed();
 
-gboolean resize_battery(void *obj);
+bool resize_battery(void *obj);
 
 void battery_action(void *obj, int button, int x, int y, Time time);
 
 /* operating system specific functions */
-gboolean battery_os_init();
+bool battery_os_init();
 void battery_os_free();
 int battery_os_update(BatteryState *state);
 char *battery_os_tooltip();

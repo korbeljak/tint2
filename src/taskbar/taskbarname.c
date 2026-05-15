@@ -32,7 +32,7 @@
 #include "server.h"
 #include "taskbarname.h"
 
-gboolean taskbarname_enabled;
+bool taskbarname_enabled;
 Color taskbarname_font_color;
 Color taskbarname_active_font_color;
 
@@ -41,7 +41,7 @@ int taskbarname_get_desired_size(void *obj);
 
 void default_taskbarname()
 {
-    taskbarname_enabled = FALSE;
+    taskbarname_enabled = false;
 }
 
 void init_taskbarname_panel(void *p)
@@ -99,7 +99,7 @@ void taskbarname_default_font_changed()
         for (int j = 0; j < panels[i].num_desktops; j++)
         {
             Taskbar *taskbar = &panels[i].taskbar[j];
-            taskbar->bar_name.area.resize_needed = TRUE;
+            taskbar->bar_name.area.resize_needed = true;
             schedule_redraw(&taskbar->bar_name.area);
         }
     }
@@ -136,7 +136,7 @@ int taskbarname_get_desired_size(void *obj)
                    PANGO_WRAP_WORD_CHAR,
                    PANGO_ELLIPSIZE_NONE,
                    PANGO_ALIGN_CENTER,
-                   FALSE,
+                   false,
                    panel->scale);
 
     return  (panel_horizontal ? name_width  + left_right_border_width(&taskbar_name->area)
@@ -144,7 +144,7 @@ int taskbarname_get_desired_size(void *obj)
             + 2 * taskbar_name->area.paddingx * panel->scale;
 }
 
-gboolean resize_taskbarname(void *obj)
+bool resize_taskbarname(void *obj)
 {
     TaskbarName *taskbar_name = obj;
     Panel *panel = taskbar_name->area.panel;
@@ -162,22 +162,22 @@ gboolean resize_taskbarname(void *obj)
                    PANGO_WRAP_WORD_CHAR,
                    PANGO_ELLIPSIZE_NONE,
                    PANGO_ALIGN_CENTER,
-                   FALSE,
+                   false,
                    panel->scale);
 
-    gboolean result = FALSE;
+    bool result = false;
     int new_size = taskbarname_get_desired_size(obj);
     if (panel_horizontal) {
         if (new_size != taskbar_name->area.width) {
             taskbar_name->area.width = new_size;
             taskbar_name->posy = (taskbar_name->area.height - name_height) / 2;
-            result = TRUE;
+            result = true;
         }
     } else {
         if (new_size != taskbar_name->area.height) {
             taskbar_name->area.height = new_size;
             taskbar_name->posy = (taskbar_name->area.height - name_height) / 2;
-            result = TRUE;
+            result = true;
         }
     }
     return result;
@@ -232,7 +232,7 @@ void update_desktop_names()
             if (strcmp(name, taskbar->bar_name.name) != 0) {
                 free( taskbar->bar_name.name);
                 taskbar->bar_name.name = name;
-                taskbar->bar_name.area.resize_needed = TRUE;
+                taskbar->bar_name.area.resize_needed = true;
             } else
                 free( name);
         }

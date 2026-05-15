@@ -19,26 +19,26 @@
 
 static GSList   *tracing_events = NULL,
                 *tracing_events_tail = NULL;
-static sig_atomic_t tracing = FALSE;
+static sig_atomic_t tracing = false;
 
 typedef struct TracingEvent {
     void *address;
     void *caller;
     double time;
-    gboolean enter;
+    bool enter;
 } TracingEvent;
 
 void __attribute__ ((constructor)) init_tracing()
 {
     tracing_events = NULL;
-    tracing = FALSE;
+    tracing = false;
 }
 
 void cleanup_tracing()
 {
     g_slist_free_full( tracing_events, free);
     tracing_events = NULL;
-    tracing = FALSE;
+    tracing = false;
 }
 
 char *addr2name(void *func)
@@ -57,7 +57,7 @@ char *addr2name(void *func)
     return result;
 }
 
-void add_tracing_event(void *func, void *caller, gboolean enter)
+void add_tracing_event(void *func, void *caller, bool enter)
 {
     TracingEvent *entry = calloc(sizeof(TracingEvent), 1);
     entry->address = func;
@@ -71,25 +71,25 @@ void start_tracing(void *root)
 {
     if (tracing_events)
         cleanup_tracing();
-    add_tracing_event(root, NULL, TRUE);
-    tracing = TRUE;
+    add_tracing_event(root, NULL, true);
+    tracing = true;
 }
 
 void stop_tracing()
 {
-    tracing = FALSE;
+    tracing = false;
 }
 
 void __cyg_profile_func_enter(void *func, void *caller)
 {
     if (tracing)
-        add_tracing_event(func, caller, TRUE);
+        add_tracing_event(func, caller, true);
 }
 
 void __cyg_profile_func_exit(void *func, void *caller)
 {
     if (tracing)
-        add_tracing_event(func, caller, FALSE);
+        add_tracing_event(func, caller, false);
 }
 
 void print_tracing_events()

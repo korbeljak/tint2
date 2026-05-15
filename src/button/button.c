@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <time.h>
 #include <fcntl.h>
+#include <stdbool.h>
 
 #include "window.h"
 #include "server.h"
@@ -32,7 +33,7 @@ Button *create_button()
     Button *button = calloc(1, sizeof(Button) + sizeof(ButtonBackend));
     ButtonBackend *backend = button->backend = (gpointer)(button + 1);
 
-    backend->centered = TRUE;
+    backend->centered = true;
     backend->lclick_command_sink = -1;
     backend->mclick_command_sink = -1;
     backend->rclick_command_sink = -1;
@@ -166,8 +167,8 @@ void init_button_panel(void *p)
                                            backend->rclick_command || backend->uwheel_command ||
                                            backend->dwheel_command);
 
-        area->resize_needed = TRUE;
-        area->on_screen = TRUE;
+        area->resize_needed = true;
+        area->on_screen = true;
         area_gradients_create(area);
 
         button_reload_icon(button);
@@ -185,14 +186,14 @@ void button_init_fonts()
 
 void button_default_font_changed()
 {
-    gboolean needs_update = FALSE;
+    bool needs_update = false;
     for (GList *l = panel_config.button_list; l; l = l->next)
     {
         ButtonBackend *backend = ((Button *)l->data)->backend;
         if (!backend->has_font) {
             pango_font_description_free(backend->font_desc);
             backend->font_desc = NULL;
-            needs_update = TRUE;
+            needs_update = true;
         }
     }
     if (!needs_update)
@@ -206,7 +207,7 @@ void button_default_font_changed()
             Area *area = &button->area;
 
             if (!button->backend->has_font) {
-                area->resize_needed = TRUE;
+                area->resize_needed = true;
                 schedule_redraw(area);
             }
         }
@@ -231,16 +232,16 @@ void button_reload_icon(Button *button)
     if (!icon_name)
         return;
 
-    char *new_icon_path = get_icon_path(icon_theme_wrapper, icon_name, frontend->iconw, TRUE);
+    char *new_icon_path = get_icon_path(icon_theme_wrapper, icon_name, frontend->iconw, true);
     if (new_icon_path) {
-        frontend->icon = load_image(new_icon_path, TRUE);
+        frontend->icon = load_image(new_icon_path, true);
         free( new_icon_path);
     }
     // On loading error, fallback to default
     if (!frontend->icon) {
-        new_icon_path = get_icon_path(icon_theme_wrapper, DEFAULT_ICON, frontend->iconw, TRUE);
+        new_icon_path = get_icon_path(icon_theme_wrapper, DEFAULT_ICON, frontend->iconw, true);
         if (new_icon_path) {
-            frontend->icon = load_image(new_icon_path, TRUE);
+            frontend->icon = load_image(new_icon_path, true);
             free( new_icon_path);
         }
     }
@@ -327,7 +328,7 @@ int button_get_desired_size(void *obj)
                            PANGO_WRAP_WORD_CHAR,
                            PANGO_ELLIPSIZE_NONE,
                            backend->centered ? PANGO_ALIGN_CENTER : PANGO_ALIGN_LEFT,
-                           FALSE,
+                           false,
                            panel->scale);
         else {
             int x1 = icon_w ? icon_w + interior_padding : 0;
@@ -342,7 +343,7 @@ int button_get_desired_size(void *obj)
                            PANGO_WRAP_WORD_CHAR,
                            PANGO_ELLIPSIZE_NONE,
                            backend->centered ? PANGO_ALIGN_CENTER : PANGO_ALIGN_LEFT,
-                           FALSE,
+                           false,
                            panel->scale);
         }
     } else
@@ -367,7 +368,7 @@ int button_get_desired_size(void *obj)
     }
 }
 
-gboolean resize_button(void *obj)
+bool resize_button(void *obj)
 {
     Button *button = obj;
     ButtonBackend *backend = button->backend;
@@ -410,12 +411,12 @@ gboolean resize_button(void *obj)
                        PANGO_WRAP_WORD_CHAR,
                        PANGO_ELLIPSIZE_NONE,
                        backend->centered ? PANGO_ALIGN_CENTER : PANGO_ALIGN_LEFT,
-                       FALSE,
+                       false,
                        panel->scale);
     else
         txt_height = txt_width = 0;
 
-    gboolean result = FALSE;
+    bool result = false;
     if (panel_horizontal)
     {
         int new_size, x1, x2;
@@ -429,7 +430,7 @@ gboolean resize_button(void *obj)
         new_size += 2 * horiz_padding + left_right_border_width(area);
         if (new_size != area->width) {
             area->width = new_size;
-            result = TRUE;
+            result = true;
         }
     }
     else
@@ -439,7 +440,7 @@ gboolean resize_button(void *obj)
         new_size = MAX(new_size, icon_h + 2 * vert_padding + top_bottom_border_width(area));
         if (new_size != area->height) {
             area->height = new_size;
-            result = TRUE;
+            result = true;
         }
     }
     frontend->textw = txt_width;
@@ -574,7 +575,7 @@ void button_action(void *obj, int button, int x, int y, Time time)
             backend->uwheel_command, // 4
             backend->dwheel_command // 5
         };
-        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, FALSE, TRUE);
+        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, false, true);
     }
 }
 

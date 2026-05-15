@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <X11/Xlib.h>
@@ -48,25 +49,25 @@ MouseAction mouse_tilt_left;
 MouseAction mouse_tilt_right;
 
 TaskbarMode taskbar_mode;
-gboolean wm_menu;
-gboolean panel_dock;
-gboolean panel_pivot_struts;
+bool wm_menu;
+bool panel_dock;
+bool panel_pivot_struts;
 Layer panel_layer;
 PanelPosition panel_position;
-gboolean panel_horizontal;
-gboolean panel_redraw;
-gboolean task_dragged;
+bool panel_horizontal;
+bool panel_redraw;
+bool task_dragged;
 char *panel_window_name = NULL;
-gboolean debug_geometry;
-gboolean debug_gradients;
-gboolean startup_notifications;
-gboolean debug_thumbnails;
-gboolean debug_blink;
-gboolean panel_autohide;
+bool debug_geometry;
+bool debug_gradients;
+bool startup_notifications;
+bool debug_thumbnails;
+bool debug_blink;
+bool panel_autohide;
 int panel_autohide_show_timeout;
 int panel_autohide_hide_timeout;
 int panel_autohide_height;
-gboolean panel_shrink;
+bool panel_shrink;
 StrutPolicy panel_strut_policy;
 char *panel_items_order;
 
@@ -94,21 +95,21 @@ void default_panel()
     panels = NULL;
     num_panels = 0;
     default_icon = NULL;
-    task_dragged = FALSE;
-    panel_horizontal = TRUE;
+    task_dragged = false;
+    panel_horizontal = true;
     panel_position = CENTER;
     panel_items_order = NULL;
-    panel_autohide = FALSE;
+    panel_autohide = false;
     panel_autohide_show_timeout = 0;
     panel_autohide_hide_timeout = 0;
     panel_autohide_height = 5; // for vertical panels this is of course the width
-    panel_shrink = FALSE;
+    panel_shrink = false;
     panel_strut_policy = STRUT_FOLLOW_SIZE;
-    panel_dock = FALSE;         // default not in the dock
-    panel_pivot_struts = FALSE;
+    panel_dock = false;         // default not in the dock
+    panel_pivot_struts = false;
     panel_layer = BOTTOM_LAYER; // default is bottom layer
     strdup_static(panel_window_name, "tint2");
-    wm_menu = FALSE;
+    wm_menu = false;
     max_tick_urgent = 14;
     mouse_left = TOGGLE_ICONIFY;
     backgrounds = g_array_new(0, 0, sizeof(Background));
@@ -122,7 +123,7 @@ void default_panel()
     panel_config.mouse_pressed_alpha = 100;
     panel_config.mouse_pressed_saturation = 0;
     panel_config.mouse_pressed_brightness = 0;
-    panel_config.mouse_effects = TRUE;
+    panel_config.mouse_effects = true;
 
     // First background is always fully transparent
     Background transparent_bg;
@@ -164,13 +165,13 @@ void cleanup_panel()
     free_and_null( panels);
     free_area(&panel_config.area);
 
-    g_array_free(backgrounds, TRUE);
+    g_array_free(backgrounds, true);
     backgrounds = NULL;
     if (gradients)
     {
         for (guint i = 0; i < gradients->len; i++)
             cleanup_gradient(&g_array_index(gradients, GradientClass, i));
-        g_array_free(gradients, TRUE);
+        g_array_free(gradients, true);
     }
     gradients = NULL;
     pango_font_description_free(panel_config.g_task.font_desc);
@@ -236,8 +237,8 @@ void init_panel()
         p->area.parent = p;
         p->area.panel = p;
         snprintf(p->area.name, strlen_const(p->area.name), "Panel %d", i);
-        p->area.on_screen = TRUE;
-        p->area.resize_needed = TRUE;
+        p->area.on_screen = true;
+        p->area.resize_needed = true;
         p->area.size_mode = LAYOUT_DYNAMIC;
         p->area._resize = resize_panel;
         p->area._clear = panel_clear_background;
@@ -258,7 +259,7 @@ void init_panel()
 #endif
             case 'S':   if (systray_on_monitor(i, num_panels)) {
                             init_systray_panel(p);
-                            refresh_systray = TRUE;
+                            refresh_systray = true;
                         }
                         break;
             case 'C':   init_clock_panel(p);
@@ -325,11 +326,11 @@ void panel_get_size(Panel *panel)
     if (panel_horizontal)
     {
         if (panel->area.width == 0) {
-            panel->fractional_width = TRUE;
+            panel->fractional_width = true;
             panel->area.width = 100;
         }
         if (panel->area.height == 0) {
-            panel->fractional_height = FALSE;
+            panel->fractional_height = false;
             panel->area.height = 32;
         }
         if (panel->fractional_width)
@@ -351,11 +352,11 @@ void panel_get_size(Panel *panel)
     else
     {
         if (panel->area.height == 0) {
-            panel->fractional_height = TRUE;
+            panel->fractional_height = true;
             panel->area.height = 100;
         }
         if (panel->area.width == 0) {
-            panel->fractional_width = FALSE;
+            panel->fractional_width = false;
             panel->area.width = 140;
         }
         int old_panel_height = panel->area.height;
@@ -422,7 +423,7 @@ void init_panel_geometry(Panel *panel)
     panel_get_position(panel);
 }
 
-gboolean resize_panel(void *obj)
+bool resize_panel(void *obj)
 {
     Panel *panel = obj;
     relayout_with_constraint(&panel->area, 0);
@@ -440,7 +441,7 @@ gboolean resize_panel(void *obj)
                     continue;
                 if (panel->taskbar[i].area.width  != width || panel->taskbar[i].area.height != height)
                 {
-                    panel->taskbar[i].area.resize_needed = TRUE;
+                    panel->taskbar[i].area.resize_needed = true;
                     panel->taskbar[i].area.width  = width;
                     panel->taskbar[i].area.height = height;
                 }
@@ -623,7 +624,7 @@ gboolean resize_panel(void *obj)
     }
     for (GList *l = panel->freespace_list; l; l = l->next)
         resize_freespace(l->data);
-    return FALSE;
+    return false;
 }
 
 void update_strut(Panel *p)
@@ -710,7 +711,7 @@ void set_panel_items_order(Panel *p)
         int i = p - panels;
         switch (panel_items_order[k]) {
         case 'L':   ADD_CHILD (&p->launcher);
-                    p->launcher.area.resize_needed = TRUE;
+                    p->launcher.area.resize_needed = true;
                     break;
         case 'T':   for (int j = 0; j < p->num_desktops; j++)
                         ADD_CHILD (&p->taskbar[j]);
@@ -1051,11 +1052,11 @@ void autohide_show(void *p)
 {
     Panel *panel = p;
     stop_autohide_timer(panel);
-    panel->is_hidden = FALSE;
+    panel->is_hidden = false;
     XMapSubwindows(server.display, panel->main_win); // systray windows
     set_panel_window_geometry(panel);
     set_panel_layer(panel, TOP_LAYER);
-    refresh_systray = TRUE; // ugly hack, because we actually only need to call XSetBackgroundPixmap
+    refresh_systray = true; // ugly hack, because we actually only need to call XSetBackgroundPixmap
     schedule_panel_redraw();
 }
 
@@ -1064,7 +1065,7 @@ void autohide_hide(void *p)
     Panel *panel = p;
     stop_autohide_timer(panel);
     set_panel_layer(panel, panel_layer);
-    panel->is_hidden = TRUE;
+    panel->is_hidden = true;
     XUnmapSubwindows(server.display, panel->main_win); // systray windows
     set_panel_window_geometry(panel);
     schedule_panel_redraw();
@@ -1108,26 +1109,26 @@ void autohide_trigger_hide(Panel *p, bool forced)
 void shrink_panel(Panel *panel)
 {
     int size = MIN(get_desired_size(&panel->area), panel->max_size);
-    gboolean update = FALSE;
+    bool update = false;
     if (panel_horizontal) {
         if (panel->area.width != size) {
             panel->area.width = size;
-            update = TRUE;
+            update = true;
         }
     } else {
         if (panel->area.height != size) {
             panel->area.height = size;
-            update = TRUE;
+            update = true;
         }
     }
     if (update) {
         panel_get_position(panel);
         set_panel_window_geometry(panel);
         set_panel_background(panel);
-        panel->area.resize_needed = TRUE;
-        systray.area.resize_needed = TRUE;
+        panel->area.resize_needed = true;
+        systray.area.resize_needed = true;
         schedule_redraw(&systray.area);
-        refresh_systray = TRUE;
+        refresh_systray = true;
         update_minimized_icon_positions(panel);
     }
 }
@@ -1175,7 +1176,7 @@ void default_font_changed()
 
 void _schedule_panel_redraw(const char *file, const char *function, const int line)
 {
-    panel_redraw = TRUE;
+    panel_redraw = true;
     if (debug_fps) {
         fprintf(stderr, YELLOW "tint2: %s %s %d: triggering panel redraw" RESET "\n", file, function, line);
     }

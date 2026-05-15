@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "drag_and_drop.h"
 #include "panel.h"
@@ -31,9 +32,9 @@ static Atom dnd_selection;
 static Atom dnd_atom;
 static int dnd_sent_request;
 static LauncherIcon *dnd_launcher_icon;
-gboolean debug_dnd = FALSE;
+bool debug_dnd = false;
 
-gboolean hidden_panel_shown_for_dnd;
+bool hidden_panel_shown_for_dnd;
 
 // This fetches all the data from a property
 struct Property dnd_read_property(Display *disp, Window w, Atom property)
@@ -153,7 +154,7 @@ void dnd_init()
     dnd_atom = None;
     dnd_sent_request = 0;
     dnd_launcher_icon = NULL;
-    hidden_panel_shown_for_dnd = FALSE;
+    hidden_panel_shown_for_dnd = false;
 }
 
 void handle_dnd_enter(XClientMessageEvent *e)
@@ -337,7 +338,7 @@ void handle_dnd_selection_notify(XSelectionEvent *e)
                 if (strcasecmp(atom_name, "STRING") == 0 || strcasecmp(atom_name, "text/uri-list") == 0) {
                     GString *url = g_string_new("");
                     GString *prev_url = g_string_new("");
-                    gboolean must_unescape = strcasecmp(atom_name, "text/uri-list") == 0;
+                    bool must_unescape = strcasecmp(atom_name, "text/uri-list") == 0;
                     for (int i = 0; i < prop.nitems * prop.format / 8; i++)
                     {
                         char c = ((char *)prop.data)[i];
@@ -360,7 +361,7 @@ void handle_dnd_selection_notify(XSelectionEvent *e)
                                     g_string_append(piece, "\"");
                                     g_string_append(piece, " %F");
                                     tint2_g_string_replace(cmd, "%F", piece->str);
-                                    g_string_free(piece, TRUE);
+                                    g_string_free(piece, true);
                                 }
                                 else if (strstr(cmd->str, "%f"))
                                 {
@@ -369,7 +370,7 @@ void handle_dnd_selection_notify(XSelectionEvent *e)
                                     g_string_append(piece, url->str);
                                     g_string_append(piece, "\"");
                                     tint2_g_string_replace(cmd, "%f", piece->str);
-                                    g_string_free(piece, TRUE);
+                                    g_string_free(piece, true);
                                     break;
                                 }
                                 else
@@ -389,8 +390,8 @@ void handle_dnd_selection_notify(XSelectionEvent *e)
                             g_string_append_c(url, c);
                         }
                     }
-                    g_string_free(url, TRUE);
-                    g_string_free(prev_url, TRUE);
+                    g_string_free(url, true);
+                    g_string_free(prev_url, true);
                 }
                 tint2_g_string_replace(cmd, "%F", "");
                 tint2_g_string_replace(cmd, "%f", "");
@@ -405,7 +406,7 @@ void handle_dnd_selection_notify(XSelectionEvent *e)
                           0,
                           dnd_launcher_icon->start_in_terminal,
                           dnd_launcher_icon->startup_notification);
-                g_string_free(cmd, TRUE);
+                g_string_free(cmd, true);
 
                 // Reply OK.
                 XClientMessageEvent m;

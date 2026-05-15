@@ -31,8 +31,8 @@ typedef struct LauncherIcon {
     Imlib_Image image_pressed;
     char *cmd;
     char *cwd;
-    gboolean start_in_terminal;
-    gboolean startup_notification;
+    bool start_in_terminal;
+    bool startup_notification;
     char *icon_name;
     char *icon_path;
     char *icon_tooltip;
@@ -40,15 +40,15 @@ typedef struct LauncherIcon {
     int x, y;
 } LauncherIcon;
 
-extern gboolean launcher_enabled;
+extern bool launcher_enabled;
 extern int launcher_max_icon_size;
-extern gboolean launcher_tooltip_enabled;
+extern bool launcher_tooltip_enabled;
 extern int launcher_alpha;
 extern int launcher_saturation;
 extern int launcher_brightness;
 extern char *icon_theme_name_xsettings; // theme name
 extern char *icon_theme_name_config;
-extern gboolean launcher_icon_theme_override;
+extern bool launcher_icon_theme_override;
 extern Background *launcher_icon_bg;
 extern GList *launcher_icon_gradients;
 
@@ -63,7 +63,7 @@ void init_launcher_panel(void *panel);
 void cleanup_launcher();
 void cleanup_launcher_theme(Launcher *launcher);
 
-gboolean resize_launcher(void *obj);
+bool resize_launcher(void *obj);
 void draw_launcher(void *obj, cairo_t *c);
 void launcher_default_icon_theme_changed();
 

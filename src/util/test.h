@@ -1,25 +1,24 @@
 #ifndef TEST_H
 #define TEST_H
-
-#include "bool.h"
+#include <stdbool.h>
 #include "print.h"
 
-typedef void Test(Status *test_result_);
+typedef void Test(bool *test_result_);
 
 void register_test_(Test *test, const char *name);
 
 #define TEST(name)                                           \
-    void test_##name(Status *test_result_);                  \
+    void test_##name(bool *test_result_);                  \
     __attribute__((constructor)) void test_register_##name() \
     {                                                        \
         register_test_(test_##name, #name);                  \
     }                                                        \
-    void test_##name(Status *test_result_)
+    void test_##name(bool *test_result_)
 
 void run_all_tests(bool verbose);
 
 #define FAIL_TEST_           \
-    *test_result_ = FAILURE; \
+    *test_result_ = false; \
     return;
 
 #define ASSERT(value) \

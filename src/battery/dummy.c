@@ -18,14 +18,16 @@
 **************************************************************************/
 
 #include <string.h>
+#include <stdbool.h>
+
 #include "common.h"
 #include "battery.h"
 
 #warning tint2 has no battery support for this operating system!
 
-gboolean battery_os_init()
+bool battery_os_init()
 {
-    return FALSE;
+    return false;
 }
 
 void battery_os_free()

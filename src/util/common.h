@@ -10,6 +10,7 @@
 #define TINT2_PANGO_SLACK 0
 
 #include <glib.h>
+#include <stdbool.h>
 #include <Imlib2.h>
 #include <pango/pangocairo.h>
 #include "area.h"
@@ -193,8 +194,8 @@ pid_t tint_exec(
     Area *area,
     int x,
     int y,
-    gboolean terminal,
-    gboolean startup_notification);
+    bool terminal,
+    bool startup_notification);
 
 void tint_exec_no_sn(const char *command);
 int setenvd(const char *name, const int value);
@@ -255,10 +256,10 @@ void get_text_size2(const PangoFontDescription *font,
                     PangoWrapMode wrap,
                     PangoEllipsizeMode ellipsis,
                     PangoAlignment alignment,
-                    gboolean markup,
+                    bool markup,
                     double scale);
 
-gboolean layout_set_markup_strip_colors(PangoLayout *layout, const char *markup);
+bool layout_set_markup_strip_colors(PangoLayout *layout, const char *markup);
 void draw_text(PangoLayout *layout, cairo_t *c, int posx, int posy, Color *color, PangoLayout *shadow_layout);
 
 void draw_rect(cairo_t *c, double x, double y, double w, double h, double r, int corner_mask);

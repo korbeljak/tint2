@@ -174,7 +174,7 @@ Task *add_task(Window win)
 
     if (taskbar_mode == MULTI_DESKTOP) {
         Panel *panel = task_template.area.panel;
-        panel->area.resize_needed = TRUE;
+        panel->area.resize_needed = true;
     }
 
     if (window_is_urgent(win))
@@ -210,7 +210,7 @@ void remove_task(Task *task)
 
     if (taskbar_mode == MULTI_DESKTOP) {
         Panel *panel = task->area.panel;
-        panel->area.resize_needed = TRUE;
+        panel->area.resize_needed = true;
     }
 
     Window win = task->win;
@@ -246,12 +246,12 @@ void remove_task(Task *task)
         update_all_taskbars_visibility();
 }
 
-gboolean task_update_title(Task *task)
+bool task_update_title(Task *task)
 {
     Panel *panel = task->area.panel;
 
     if (!panel->g_task.has_text && !panel->g_task.tooltip_enabled && taskbar_sort_method != TASKBAR_SORT_TITLE)
-        return FALSE;
+        return false;
 
     char *name = get_property(task->win, server.atom [_NET_WM_VISIBLE_NAME], server.atom [UTF8_STRING], NULL);
     if (!name || !name[0]) {
@@ -268,7 +268,7 @@ gboolean task_update_title(Task *task)
         {
             if (name)
                 XFree( name);
-            return FALSE;
+            return false;
         }
         free( task->title);
     }
@@ -285,7 +285,7 @@ gboolean task_update_title(Task *task)
             task2->title = task->title;
             schedule_redraw(&task2->area);
         }
-    return TRUE;
+    return true;
 }
 
 Imlib_Image task_get_icon(Window win, int icon_size)
@@ -737,7 +737,7 @@ void set_task_state(Task *task, TaskState state)
                 schedule_redraw(&task1->area);
                 if (state == TASK_ACTIVE && g_slist_find(urgent_list, task1))
                     del_urgent(task1);
-                gboolean hide = FALSE;
+                bool hide = false;
                 Taskbar *taskbar = task1->area.parent;
                 if (task->desktop == ALL_DESKTOPS && server.desktop != taskbar->desktop)
                     // Hide ALL_DESKTOPS task on non-current desktop
@@ -748,15 +748,15 @@ void set_task_state(Task *task, TaskState state)
                     ((hide_task_diff_monitor || num_panels > 1) &&
                      get_window_monitor(task->win) != ((Panel *)task->area.panel)->monitor) )
 
-                    hide = TRUE;
+                    hide = true;
                 
                 if (hide == task1->area.on_screen) {
                     task1->area.on_screen = !hide;
                     schedule_redraw(&task1->area);
                     Panel *p = task->area.panel;
-                    task->area.resize_needed = TRUE;
-                    p->taskbar->area.resize_needed = TRUE;
-                    p->area.resize_needed = TRUE;
+                    task->area.resize_needed = true;
+                    p->taskbar->area.resize_needed = true;
+                    p->area.resize_needed = true;
                 }
             }
             schedule_panel_redraw();

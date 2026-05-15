@@ -23,13 +23,14 @@
 #include <unistd.h>
 #include <string.h>
 #include <machine/apmvar.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "battery.h"
 
 int apm_fd = -1;
 
-gboolean battery_os_init()
+bool battery_os_init()
 {
     if (apm_fd > 0)
         close(apm_fd);
@@ -38,9 +39,9 @@ gboolean battery_os_init()
 
     if (apm_fd < 0) {
         warn("ERROR: battery applet cannot open /dev/apm.");
-        return FALSE;
+        return false;
     } else {
-        return TRUE;
+        return true;
     }
 }
 
@@ -100,7 +101,7 @@ char *battery_os_tooltip()
     g_string_append_printf(tooltip, battery_state.ac_connected ? "\tConnected" : "\tDisconnected");
 
     result = tooltip->str;
-    g_string_free(tooltip, FALSE);
+    g_string_free(tooltip, false);
 
     return result;
 }

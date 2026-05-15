@@ -12,13 +12,14 @@
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/Xinerama.h>
+#include <stdbool.h>
 
 #ifdef HAVE_SN
 #include <libsn/sn.h>
 #endif
 #include <glib.h>
 
-extern gboolean primary_monitor_first;
+extern bool primary_monitor_first;
 
 enum atom {
     _XROOTPMAP_ID,
@@ -119,7 +120,7 @@ typedef struct Monitor {
     int width;
     int height;
     int dpi;
-    gboolean primary;
+    bool primary;
     gchar **names;
 } Monitor;
 
@@ -138,8 +139,8 @@ typedef struct Server {
 
     Window root_win;
     Window composite_manager;
-    gboolean real_transparency;
-    gboolean disable_transparency;
+    bool real_transparency;
+    bool disable_transparency;
     int desktop;        // current desktop
     int screen;
     int depth;
@@ -151,7 +152,7 @@ typedef struct Server {
     // In that case there are num_desktops viewports.
 
     Monitor *monitors;
-    gboolean got_root_win;
+    bool got_root_win;
     Visual *visual;
     Visual *visual32;
     Pixmap root_pmap;   // root background
@@ -161,7 +162,7 @@ typedef struct Server {
     Atom atom [NUM_ATOMS];
     int xdamage_event_type;
     int xdamage_event_error_type;
-    gboolean has_shm;
+    bool has_shm;
 #ifdef HAVE_SN
     SnDisplay *sn_display;
     GTree *pids;

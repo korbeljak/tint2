@@ -29,6 +29,7 @@
 #include <X11/Xatom.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <glib/gstdio.h>
@@ -100,20 +101,20 @@ char *snapshot_path = NULL;
 // --------------------------------------------------
 // backward compatibility
 // detect if it's an old config file (==1)
-static gboolean new_config_file;
+static bool new_config_file;
 
-static gboolean read_bg_color_hover;
-static gboolean read_border_color_hover;
-static gboolean read_bg_color_press;
-static gboolean read_border_color_press;
-static gboolean read_panel_position;
+static bool read_bg_color_hover;
+static bool read_border_color_hover;
+static bool read_bg_color_press;
+static bool read_border_color_press;
+static bool read_panel_position;
 
 void default_config()
 {
     config_path = NULL;
     snapshot_path = NULL;
-    new_config_file = FALSE;
-    read_panel_position = FALSE;
+    new_config_file = false;
+    read_panel_position = false;
 }
 
 void cleanup_config()
@@ -342,10 +343,10 @@ void add_entry(char *key, char *value)
         init_background(&bg);
         bg.border.radius = atoi(value);
         g_array_append_val(backgrounds, bg);
-        read_bg_color_hover     = FALSE;
-        read_border_color_hover = FALSE;
-        read_bg_color_press     = FALSE;
-        read_border_color_press = FALSE;
+        read_bg_color_hover     = false;
+        read_border_color_hover = false;
+        read_bg_color_press     = false;
+        read_border_color_press = false;
         break;
     }
     case key_rounded_corners: {
@@ -466,13 +467,13 @@ void add_entry(char *key, char *value)
         char *b;
         if ((b = strchr(values[0], '%'))) {
             b[0] = '\0';
-            panel_config.fractional_width = TRUE;
+            panel_config.fractional_width = true;
         }
         panel_config.area.width = atoi(values[0]);
         if (panel_config.area.width == 0) {
             // full width mode
             panel_config.area.width = 100;
-            panel_config.fractional_width = TRUE;
+            panel_config.fractional_width = true;
         }
         if (values[1]) {
             if ((b = strchr(values[1], '%'))) {
@@ -484,34 +485,34 @@ void add_entry(char *key, char *value)
         break;
     }
     case key_panel_items:
-        new_config_file = TRUE;
+        new_config_file = true;
         free_and_null(panel_items_order);
         panel_items_order = strdup(value);
-        systray_enabled = FALSE;
-        launcher_enabled = FALSE;
+        systray_enabled = false;
+        launcher_enabled = false;
 #ifdef ENABLE_BATTERY
-        battery_enabled = FALSE;
+        battery_enabled = false;
 #endif
-        clock_enabled = FALSE;
-        taskbar_enabled = FALSE;
+        clock_enabled = false;
+        taskbar_enabled = false;
         for (int items_n = strlen(panel_items_order), j = 0; j < items_n; j++)
             switch (panel_items_order[j]) {
-            case 'L':   launcher_enabled = TRUE;
+            case 'L':   launcher_enabled = true;
                         break;
-            case 'T':   taskbar_enabled = TRUE;
+            case 'T':   taskbar_enabled = true;
                         break;
             case 'B':
 #ifdef ENABLE_BATTERY
-                battery_enabled = TRUE;
+                battery_enabled = true;
 #else
                 fprintf(stderr, "tint2: tint2 has been compiled without battery support\n");
 #endif
                 break;
             case 'S':   // systray disabled in snapshot mode
                         if (snapshot_path == NULL)
-                            systray_enabled = TRUE;
+                            systray_enabled = true;
                         break;
-            case 'C':   clock_enabled = TRUE;
+            case 'C':   clock_enabled = true;
                         break;
             }
         break;
@@ -525,7 +526,7 @@ void add_entry(char *key, char *value)
         VALUES_TO_AREA_PADDING(panel_config.area, 0);
         break;
     case key_panel_position:
-        read_panel_position = TRUE;
+        read_panel_position = true;
         extract_values(value, values, 3);
         panel_position = (
             !strcmp(values[0], "top"   ) ? TOP 
@@ -629,13 +630,13 @@ void add_entry(char *key, char *value)
     case key_bat1_font:
 #ifdef ENABLE_BATTERY
         bat1_font_desc = pango_font_description_from_string(value);
-        bat1_has_font = TRUE;
+        bat1_has_font = true;
 #endif
         break;
     case key_bat2_font:
 #ifdef ENABLE_BATTERY
         bat2_font_desc = pango_font_description_from_string(value);
-        bat2_has_font = TRUE;
+        bat2_has_font = true;
 #endif
         break;
     case key_bat1_format:
@@ -764,14 +765,14 @@ void add_entry(char *key, char *value)
         Execp *execp = get_or_create_last_execp();
         free_and_null(execp->backend->tooltip);
         execp->backend->tooltip = strdup(value);
-        execp->backend->has_user_tooltip = TRUE;
+        execp->backend->has_user_tooltip = true;
         break;
     }
     case key_execp_font: {
         Execp *execp = get_or_create_last_execp();
         pango_font_description_free(execp->backend->font_desc);
         execp->backend->font_desc = pango_font_description_from_string(value);
-        execp->backend->has_font = TRUE;
+        execp->backend->has_font = true;
         break;
     }
     case key_execp_font_color:
@@ -882,7 +883,7 @@ void add_entry(char *key, char *value)
         Button *button = get_or_create_last_button();
         pango_font_description_free(button->backend->font_desc);
         button->backend->font_desc = pango_font_description_from_string(value);
-        button->backend->has_font = TRUE;
+        button->backend->has_font = true;
         break;
     }
     case key_button_font_color:
@@ -932,12 +933,12 @@ void add_entry(char *key, char *value)
     /* Clock */
     case key_time1_format:
         if (!new_config_file) {
-            clock_enabled = TRUE;
+            clock_enabled = true;
             STR_APPEND_CH(panel_items_order, "C");
         }
         if (value && *value) {
             time1_format = strdup(value);
-            clock_enabled = TRUE;
+            clock_enabled = true;
         }
         break;
     case key_time2_format:
@@ -945,7 +946,7 @@ void add_entry(char *key, char *value)
         break;
     case key_time1_font:
         time1_font_desc = pango_font_description_from_string(value);
-        time1_has_font = TRUE;
+        time1_has_font = true;
         break;
     case key_time1_timezone:
         VALUE_DUP_IF_SET(time1_timezone);
@@ -955,7 +956,7 @@ void add_entry(char *key, char *value)
         break;
     case key_time2_font:
         time2_font_desc = pango_font_description_from_string(value);
-        time2_has_font = TRUE;
+        time2_has_font = true;
         break;
     case key_clock_font_color:
         VALUES_TO_COLOR (panel_config.clock.font, 0);
@@ -1023,7 +1024,7 @@ void add_entry(char *key, char *value)
         break;
     case key_taskbar_name_font:
         panel_config.taskbarname_font_desc = pango_font_description_from_string(value);
-        panel_config.taskbarname_has_font = TRUE;
+        panel_config.taskbarname_has_font = true;
         break;
     case key_taskbar_name_font_color:
         VALUES_TO_COLOR( taskbarname_font_color, 0);
@@ -1088,7 +1089,7 @@ void add_entry(char *key, char *value)
         break;
     case key_task_font:
         panel_config.g_task.font_desc = pango_font_description_from_string(value);
-        panel_config.g_task.has_font = TRUE;
+        panel_config.g_task.has_font = true;
         break;
     
     // "tooltip" is deprecated but here for backwards compatibility
@@ -1106,7 +1107,7 @@ void add_entry(char *key, char *value)
     /* Systray */
     case key_systray_padding:
         if (!new_config_file && !systray_enabled) {
-            systray_enabled = TRUE;
+            systray_enabled = true;
             STR_APPEND_CH(panel_items_order, "S");
         }
         VALUES_TO_AREA_PADDING(systray.area, 0);
@@ -1315,7 +1316,7 @@ void add_entry(char *key, char *value)
                     panel_config.g_task.area.bg = panel_config.g_task.background[TASK_NORMAL];
                 if (panel_config.g_task.background[status]->border_content_tint_weight > 0 ||
                     panel_config.g_task.background[status]->fill_content_tint_weight > 0)
-                    panel_config.g_task.has_content_tint = TRUE;
+                    panel_config.g_task.has_content_tint = true;
             }
         } else
             fprintf(stderr, "tint2: invalid option \"%s\",\n  upgrade tint2 or correct your config file\n", key);
@@ -1328,13 +1329,13 @@ void add_entry(char *key, char *value)
     #undef VALUE_TO_COMMAND
 }
 
-gboolean config_read_file(const char *path)
+bool config_read_file(const char *path)
 {
     fprintf(stderr, "tint2: Loading config file: %s\n", path);
 
     FILE *fp = fopen(path, "r");
     if (!fp)
-        return FALSE;
+        return false;
 
     char *line = NULL;
     size_t line_size = 0;
@@ -1347,13 +1348,13 @@ gboolean config_read_file(const char *path)
     fclose(fp);
 
     if (!read_panel_position) {
-        panel_horizontal = TRUE;
+        panel_horizontal = true;
         panel_position = BOTTOM;
     }
 
     // append Taskbar item
     if (!new_config_file) {
-        taskbar_enabled = TRUE;
+        taskbar_enabled = true;
         STR_PREPEND_CH(panel_items_order, "T");
     }
 
@@ -1365,10 +1366,10 @@ gboolean config_read_file(const char *path)
         if (!read_border_color_press)   bg->border_color_pressed = bg->border_color_hover;
     }
 
-    return TRUE;
+    return true;
 }
 
-gboolean config_read_default_path()
+bool config_read_default_path()
 {
 #define PATH_TEMPLATE   ("%s" G_DIR_SEPARATOR_S "tint2" G_DIR_SEPARATOR_S "tint2rc")
 #define _path_size(dir)       (snprintf( NULL, 0, PATH_TEMPLATE, (dir) ) + 1)
@@ -1426,7 +1427,7 @@ gboolean config_read_default_path()
         free( syspath);
     }
 done:;
-    gboolean result = config_read_file(userpath);
+    bool result = config_read_file(userpath);
     config_path = userpath;
     return result;
 #undef _mkdir_if_missing
@@ -1435,7 +1436,7 @@ done:;
 #undef PATH_TEMPLATE
 }
 
-gboolean config_read()
+bool config_read()
 {
     return config_path  ? config_read_file (config_path)
                         : config_read_default_path ();

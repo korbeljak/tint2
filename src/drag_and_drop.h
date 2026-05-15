@@ -7,10 +7,10 @@
 #define DRAG_AND_DROP_H
 
 #include <X11/Xlib.h>
-#include <glib.h>
+#include <stdbool.h>
 
-extern gboolean hidden_panel_shown_for_dnd;
-extern gboolean debug_dnd;
+extern bool hidden_panel_shown_for_dnd;
+extern bool debug_dnd;
 
 void dnd_init();
 

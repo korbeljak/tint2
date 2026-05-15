@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "battery.h"
@@ -44,7 +45,7 @@ struct psy_battery {
     gchar *path_rate_now;
     gchar *path_status;
     /* values */
-    gboolean present;
+    bool present;
     gint level_now;
     gint level_full;
     gint rate_now;
@@ -55,7 +56,7 @@ struct psy_battery {
 struct psy_mains {
     gchar *name;        /* generic properties */
     gchar *path_online; /* sysfs files */
-    gboolean online;    /* values */
+    bool online;    /* values */
 };
 
 static int file_get_contents( char *pathname, char **content)
@@ -108,11 +109,11 @@ end:
     return result;
 }
 
-static gboolean is_file_non_empty(const char *path)
+static bool is_file_non_empty(const char *path)
 {
     FILE *f = fopen(path, "r");
     if (!f)
-        return FALSE;
+        return false;
     char buffer[1024];
     size_t count = fread(buffer, 1, sizeof(buffer), f);
     fclose(f);
@@ -135,7 +136,7 @@ static struct uevent_notify psy_plug = {UEVENT_ADD | UEVENT_REMOVE, "power_suppl
 #define RETURN_ON_ERROR(err)                                                        \
     if (err) {                                                                           \
         fprintf(stderr, RED "tint2: %s:%d: errror" RESET "\n", __FILE__, __LINE__); \
-        return FALSE;                                                               \
+        return false;                                                               \
     }
 
 static GList *batteries = NULL;
@@ -173,14 +174,14 @@ static enum psy_type power_supply_get_type(const gchar *entryname)
     return PSY_UNKNOWN;
 }
 
-static gboolean init_linux_battery(struct psy_battery *bat)
+static bool init_linux_battery(struct psy_battery *bat)
 {
     const gchar *entryname = bat->name;
 
     bat->path_present = strdup_printf( NULL, "%s/sys/class/power_supply/%s/present", battery_sys_prefix, entryname);
     if (!is_file_non_empty(bat->path_present)) {
         fprintf(stderr, RED "tint2: %s:%d: read failed for %s" RESET "\n", __FILE__, __LINE__, bat->path_present);
-        return FALSE;
+        return false;
     }
 
     bat->path_level_now = strdup_printf( NULL, "%s/sys/class/power_supply/%s/energy_now", battery_sys_prefix, entryname);
@@ -202,33 +203,33 @@ static gboolean init_linux_battery(struct psy_battery *bat)
 
         if (!is_file_non_empty(bat->path_level_now)) {
             fprintf(stderr, RED "tint2: %s:%d: read failed for %s" RESET "\n", __FILE__, __LINE__, bat->path_level_now);
-            return FALSE;
+            return false;
         }
         if (!is_file_non_empty(bat->path_level_full)) {
             fprintf(stderr, RED "tint2: %s:%d: read failed for %s" RESET "\n", __FILE__, __LINE__, bat->path_level_full);
-            return FALSE;
+            return false;
         }
     }
 
     bat->path_status = strdup_printf( NULL, "%s/sys/class/power_supply/%s/status", battery_sys_prefix, entryname);
     if (!is_file_non_empty(bat->path_status)) {
         fprintf(stderr, RED "tint2: %s:%d: read failed for %s" RESET "\n", __FILE__, __LINE__, bat->path_status);
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
-static gboolean init_linux_mains(struct psy_mains *ac)
+static bool init_linux_mains(struct psy_mains *ac)
 {
     const gchar *entryname = ac->name;
     ac->path_online = strdup_printf( NULL, "%s/sys/class/power_supply/%s/online", battery_sys_prefix, entryname);
     if (!is_file_non_empty(ac->path_online)) {
         fprintf(stderr, RED "tint2: %s:%d: read failed for %s" RESET "\n", __FILE__, __LINE__, ac->path_online);
-        return FALSE;
+        return false;
     }
 
-    return TRUE;
+    return true;
 }
 
 static void psy_battery_free(gpointer data)
@@ -290,7 +291,7 @@ static void add_mains(const char *entryname)
     }
 }
 
-gboolean battery_os_init()
+bool battery_os_init()
 {
     GDir *directory = 0;
     GError *error = NULL;
@@ -340,7 +341,7 @@ static gint estimate_rate_usage(struct psy_battery *bat, gint old_level_now, gin
     return rate;
 }
 
-static gboolean update_linux_battery(struct psy_battery *bat)
+static bool update_linux_battery(struct psy_battery *bat)
 {
     gchar *data;
 
@@ -349,7 +350,7 @@ static gboolean update_linux_battery(struct psy_battery *bat)
     gint old_rate_now = bat->rate_now;
 
     /* reset values */
-    bat->present = FALSE;
+    bat->present = false;
     bat->status = BATTERY_UNKNOWN;
     bat->level_now = 0;
     bat->level_full = 0;
@@ -363,7 +364,7 @@ static gboolean update_linux_battery(struct psy_battery *bat)
 
     /* we are done, if battery is not present */
     if (!bat->present)
-        return TRUE;
+        return true;
 
     /* status */
     bat->status = BATTERY_UNKNOWN;
@@ -392,7 +393,7 @@ static gboolean update_linux_battery(struct psy_battery *bat)
     if (file_get_contents( bat->path_rate_now, &data) == -1)
     {
         if (errno != ENODEV)
-            return FALSE;
+            return false;
 
         /* some hardware does not support reading current rate consumption */
         bat->rate_now = estimate_rate_usage(bat, old_level_now, old_timestamp);
@@ -407,20 +408,20 @@ static gboolean update_linux_battery(struct psy_battery *bat)
         free( data);
     }
 
-    return TRUE;
+    return true;
 }
 
-static gboolean update_linux_mains(struct psy_mains *ac)
+static bool update_linux_mains(struct psy_mains *ac)
 {
     gchar *data;
-    ac->online = FALSE;
+    ac->online = false;
 
     /* online */
     RETURN_ON_ERROR( file_get_contents( ac->path_online, &data) == -1);
     ac->online = (atoi(data) == 1);
     free( data);
 
-    return TRUE;
+    return true;
 }
 
 int battery_os_update(BatteryState *state)
@@ -432,10 +433,10 @@ int battery_os_update(BatteryState *state)
     gint64 total_rate_now = 0;
     gint seconds = 0;
 
-    gboolean charging = FALSE;
-    gboolean discharging = FALSE;
-    gboolean full = FALSE;
-    gboolean ac_connected = FALSE;
+    bool charging = false;
+    bool discharging = false;
+    bool full = false;
+    bool ac_connected = false;
 
     for (l = batteries; l != NULL; l = l->next) {
         struct psy_battery *bat = l->data;
@@ -567,7 +568,7 @@ char *battery_os_tooltip()
     }
 
     result = tooltip->str;
-    g_string_free(tooltip, TRUE);
+    g_string_free(tooltip, true);
 
     return result;
 }

@@ -15,7 +15,6 @@
 #include <signal.h>
 
 #include "bt.h"
-#include "bool.h"
 
 #define UNUSED(x) ((void)x)
 

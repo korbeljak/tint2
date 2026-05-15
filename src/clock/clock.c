@@ -20,6 +20,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <cairo.h>
+#include <stdbool.h>
 #include <cairo-xlib.h>
 #include <pango/pangocairo.h>
 #include <stdlib.h>
@@ -49,14 +50,14 @@ int clock_rclick_command_sink;
 int clock_uwheel_command_sink;
 int clock_dwheel_command_sink;
 struct timeval time_clock;
-gboolean time1_has_font;
+bool time1_has_font;
 PangoFontDescription *time1_font_desc;
-gboolean time2_has_font;
+bool time2_has_font;
 PangoFontDescription *time2_font_desc;
 static char buf_time[256];
 static char buf_date[256];
 static char buf_tooltip[512];
-gboolean clock_enabled;
+bool clock_enabled;
 static Timer clock_timer;
 
 void clock_init_fonts();
@@ -66,7 +67,7 @@ void clock_dump_geometry(void *obj, int indent);
 
 void default_clock()
 {
-    clock_enabled = TRUE;
+    clock_enabled = true;
     time1_format = NULL;
     time1_timezone = NULL;
     time2_format = NULL;
@@ -79,9 +80,9 @@ void default_clock()
     clock_rclick_command = NULL;
     clock_uwheel_command = NULL;
     clock_dwheel_command = NULL;
-    time1_has_font = FALSE;
+    time1_has_font = false;
     time1_font_desc = NULL;
-    time2_has_font = FALSE;
+    time2_has_font = false;
     time2_font_desc = NULL;
     buf_time[0]    = '\0', BUF_0TERM (buf_time);
     buf_date[0]    = '\0', BUF_0TERM (buf_date);
@@ -143,7 +144,7 @@ void update_clocks()
     if (changed) {
         for (int i = 0; i < num_panels; i++)
         {
-            panels[i].clock.area.resize_needed = TRUE;
+            panels[i].clock.area.resize_needed = true;
             tooltip_update_for_area (&panels[i].clock.area);
         }
         schedule_panel_redraw();
@@ -193,8 +194,8 @@ void init_clock_panel(void *p)
     if (!time1_format)
         return;
 
-    clock->area.resize_needed = TRUE;
-    clock->area.on_screen = TRUE;
+    clock->area.resize_needed = true;
+    clock->area.on_screen = true;
     area_gradients_create(&clock->area);
 
     if (time_tooltip_format) {
@@ -239,7 +240,7 @@ void clock_default_font_changed()
     }
     clock_init_fonts();
     for (int i = 0; i < num_panels; i++) {
-        panels[i].clock.area.resize_needed = TRUE;
+        panels[i].clock.area.resize_needed = true;
         schedule_redraw(&panels[i].clock.area);
     }
     schedule_panel_redraw();
@@ -272,7 +273,7 @@ int clock_get_desired_size(void *obj)
                                           time2_font_desc);
 }
 
-gboolean resize_clock(void *obj)
+bool resize_clock(void *obj)
 {
     Clock *clock = obj;
     return resize_text_area(&clock->area,
@@ -324,6 +325,6 @@ void clock_action(void *obj, int button, int x, int y, Time time)
             clock_uwheel_command, // 4
             clock_dwheel_command // 5
         };
-        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, FALSE, TRUE);
+        tint_exec(cmds[button-1], NULL, NULL, time, obj, x, y, false, true);
     }
 }

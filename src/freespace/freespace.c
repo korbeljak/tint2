@@ -20,6 +20,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <cairo.h>
+#include <stdbool.h>
 #include <cairo-xlib.h>
 #include <pango/pangocairo.h>
 #include <stdlib.h>
@@ -52,8 +53,8 @@ void init_freespace_panel(void *p)
             freespace->area.panel = p;
             snprintf(freespace->area.name, strlen_const(freespace->area.name), "Freespace");
             freespace->area.size_mode = LAYOUT_FIXED;
-            freespace->area.resize_needed = TRUE;
-            freespace->area.on_screen = TRUE;
+            freespace->area.resize_needed = true;
+            freespace->area.on_screen = true;
             freespace->area._resize = resize_freespace;
             freespace->area._get_desired_size = freespace_get_desired_size;
         }
@@ -102,17 +103,17 @@ int freespace_get_desired_size(void *obj)
     return freespace_get_max_size(freespace->area.panel);
 }
 
-gboolean resize_freespace(void *obj)
+bool resize_freespace(void *obj)
 {
     FreeSpace *freespace = obj;
     Panel *panel = freespace->area.panel;
     if (!freespace->area.on_screen)
-        return FALSE;
+        return false;
 
     int old_size = panel_horizontal ? freespace->area.width : freespace->area.height;
     int size = freespace_get_max_size(panel);
     if (old_size == size)
-        return FALSE;
+        return false;
 
     if (panel_horizontal)
         freespace->area.width = size;
@@ -121,5 +122,5 @@ gboolean resize_freespace(void *obj)
 
     schedule_redraw(&freespace->area);
     schedule_panel_redraw();
-    return TRUE;
+    return true;
 }

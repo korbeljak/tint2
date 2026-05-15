@@ -13,6 +13,7 @@
 
 #include <pango/pangocairo.h>
 #include <sys/time.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "clock.h"
@@ -85,20 +86,20 @@ enum StrutType {
 typedef long StrutType;
 
 extern TaskbarMode taskbar_mode;
-extern gboolean wm_menu;
-extern gboolean panel_dock;
-extern gboolean panel_pivot_struts;
+extern bool wm_menu;
+extern bool panel_dock;
+extern bool panel_pivot_struts;
 extern Layer panel_layer;
 extern char *panel_window_name;
 extern PanelPosition panel_position;
-extern gboolean panel_horizontal;
-extern gboolean panel_redraw;
-extern gboolean task_dragged;
-extern gboolean panel_autohide;
+extern bool panel_horizontal;
+extern bool panel_redraw;
+extern bool task_dragged;
+extern bool panel_autohide;
 extern int panel_autohide_show_timeout;
 extern int panel_autohide_hide_timeout;
 extern int panel_autohide_height; // for vertical panels this is, of course, the width
-extern gboolean panel_shrink;
+extern bool panel_shrink;
 extern StrutPolicy panel_strut_policy;
 extern char *panel_items_order;
 extern int max_tick_urgent;
@@ -108,16 +109,16 @@ extern Imlib_Image default_icon;
 #define DEFAULT_FONT "sans 10"
 extern char *default_font;
 extern XSettingsClient *xsettings_client;
-extern gboolean startup_notifications;
-extern gboolean debug_geometry;
-extern gboolean debug_fps;
+extern bool startup_notifications;
+extern bool debug_geometry;
+extern bool debug_fps;
 extern double tracing_fps_threshold;
-extern gboolean debug_frames;
-extern gboolean debug_thumbnails;
+extern bool debug_frames;
+extern bool debug_thumbnails;
 extern double ui_scale_dpi_ref;
 extern double ui_scale_monitor_size_ref;
-extern gboolean thumb_use_shm;
-extern gboolean debug_blink;
+extern bool thumb_use_shm;
+extern bool debug_blink;
 
 typedef struct Panel {
     Area area;
@@ -128,11 +129,11 @@ typedef struct Panel {
     // position relative to root window
     int posx, posy;
     int marginx, marginy;
-    gboolean fractional_width, fractional_height;
+    bool fractional_width, fractional_height;
     int max_size;
     int monitor;
-    gboolean font_shadow;
-    gboolean mouse_effects;
+    bool font_shadow;
+    bool mouse_effects;
 
     // Mouse effects for icons
     int mouse_over_alpha;
@@ -150,7 +151,7 @@ typedef struct Panel {
     // Array of Taskbar, with num_desktops items
     Taskbar *taskbar;
     int num_desktops;
-    gboolean taskbarname_has_font;
+    bool taskbarname_has_font;
     PangoFontDescription *taskbarname_font_desc;
 
     Clock clock;
@@ -166,7 +167,7 @@ typedef struct Panel {
     GList *button_list;
 
     // Autohide
-    gboolean is_hidden;
+    bool is_hidden;
     int hidden_width, hidden_height;
     Pixmap hidden_pixmap;
     Timer autohide_timer;
@@ -184,7 +185,7 @@ void init_panel();
 // use panel_config as default value
 
 void init_panel_geometry(Panel *panel);
-gboolean resize_panel(void *obj);
+bool resize_panel(void *obj);
 void render_panel(Panel *panel);
 void shrink_panel(Panel *panel);
 void _schedule_panel_redraw(const char *file, const char *function, const int line);

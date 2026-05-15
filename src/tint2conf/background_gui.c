@@ -19,12 +19,12 @@ GtkWidget *create_background_combo(const char *label)
 {
     GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(backgrounds));
     GtkCellRenderer *renderer = gtk_cell_renderer_pixbuf_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, false);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "pixbuf", bgColPixbuf, NULL);
     renderer = gtk_cell_renderer_text_new();
     g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
     g_object_set(renderer, "wrap-width", 300, NULL);
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, false);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "text", bgColText, NULL);
     g_signal_connect(G_OBJECT(combo), "changed", G_CALLBACK(background_combo_changed), (void *)label);
     return combo;
@@ -43,7 +43,7 @@ void background_combo_changed(GtkWidget *widget, gpointer data)
         GtkTreeIter iter;
 
         path = gtk_tree_path_new_from_indices(index, -1);
-        gboolean found = gtk_tree_model_get_iter(GTK_TREE_MODEL(backgrounds), &iter, path);
+        bool found = gtk_tree_model_get_iter(GTK_TREE_MODEL(backgrounds), &iter, path);
         gtk_tree_path_free(path);
 
         if (!found) {
@@ -121,16 +121,16 @@ void init_background_page (GtkWidget *parent)
     GtkWidget *label, *button;
     int row, col;
 
-    table = gtk_table_new(1, 4, FALSE);
+    table = gtk_table_new(1, 4, false);
     gtk_widget_show(table);
-    gtk_box_pack_start(GTK_BOX(parent), table, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(parent), table, false, false, 0);
     gtk_table_set_row_spacings(GTK_TABLE(table), ROW_SPACING);
     gtk_table_set_col_spacings(GTK_TABLE(table), COL_SPACING);
 
     row = 0, col = 0;
     label = gtk_label_new(_("<b>Background</b>"));
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
-    gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
+    gtk_label_set_use_markup(GTK_LABEL(label), true);
     gtk_widget_show(label);
     gtk_table_attach(GTK_TABLE(table), label, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -155,9 +155,9 @@ void init_background_page (GtkWidget *parent)
     col++;
     gtk_widget_set_tooltip_text(button, _("Deletes the current background"));
 
-    table = gtk_table_new(4, 4, FALSE);
+    table = gtk_table_new(4, 4, false);
     gtk_widget_show(table);
-    gtk_box_pack_start(GTK_BOX(parent), table, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(parent), table, false, false, 0);
     gtk_table_set_row_spacings(GTK_TABLE(table), ROW_SPACING);
     gtk_table_set_col_spacings(GTK_TABLE(table), COL_SPACING);
 
@@ -169,7 +169,7 @@ void init_background_page (GtkWidget *parent)
     col++;
 
     background_fill_color = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_fill_color), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_fill_color), true);
     gtk_widget_show(background_fill_color);
     gtk_table_attach(GTK_TABLE(table), background_fill_color, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -196,7 +196,7 @@ void init_background_page (GtkWidget *parent)
     col++;
 
     background_border_color = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_border_color), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_border_color), true);
     gtk_widget_show(background_border_color);
     gtk_table_attach(GTK_TABLE(table), background_border_color, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -235,7 +235,7 @@ void init_background_page (GtkWidget *parent)
     col++;
 
     background_fill_color_over = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_fill_color_over), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_fill_color_over), true);
     gtk_widget_show(background_fill_color_over);
     gtk_table_attach(GTK_TABLE(table), background_fill_color_over, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -250,7 +250,7 @@ void init_background_page (GtkWidget *parent)
     col++;
 
     background_border_color_over = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_border_color_over), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_border_color_over), true);
     gtk_widget_show(background_border_color_over);
     gtk_table_attach(GTK_TABLE(table), background_border_color_over, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -278,7 +278,7 @@ void init_background_page (GtkWidget *parent)
     col++;
 
     background_fill_color_press = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_fill_color_press), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_fill_color_press), true);
     gtk_widget_show(background_fill_color_press);
     gtk_table_attach(GTK_TABLE(table), background_fill_color_press, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -293,7 +293,7 @@ void init_background_page (GtkWidget *parent)
     col++;
 
     background_border_color_press = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_border_color_press), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(background_border_color_press), true);
     gtk_widget_show(background_border_color_press);
     gtk_table_attach(GTK_TABLE(table), background_border_color_press, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -453,14 +453,14 @@ void background_create_new()
                        bgColFillColorPress,     &newColor,
                        bgColBorderColorPress,   &newColor,
                        bgColGradientIdPress,    -1,
-                       bgColBorderSidesTop,     TRUE,
-                       bgColBorderSidesBottom,  TRUE,
-                       bgColBorderSidesLeft,    TRUE,
-                       bgColBorderSidesRight,   TRUE,
-                       bgColCornerRoundTL,      TRUE,
-                       bgColCornerRoundTR,      TRUE,
-                       bgColCornerRoundBL,      TRUE,
-                       bgColCornerRoundBR,      TRUE,
+                       bgColBorderSidesTop,     true,
+                       bgColBorderSidesBottom,  true,
+                       bgColBorderSidesLeft,    true,
+                       bgColBorderSidesRight,   true,
+                       bgColCornerRoundTL,      true,
+                       bgColCornerRoundTR,      true,
+                       bgColCornerRoundBL,      true,
+                       bgColCornerRoundBR,      true,
                        -1);
 
     background_update_image(0);
@@ -485,14 +485,14 @@ void background_duplicate(GtkWidget *widget, gpointer data)
 
     int r;
     int b;
-    gboolean sideTop;
-    gboolean sideBottom;
-    gboolean sideLeft;
-    gboolean sideRight;
-    gboolean roundTL;
-    gboolean roundTR;
-    gboolean roundBL;
-    gboolean roundBR;
+    bool sideTop;
+    bool sideBottom;
+    bool sideLeft;
+    bool sideRight;
+    bool roundTL;
+    bool roundTR;
+    bool roundBL;
+    bool roundBR;
     GdkRGBA *fillColor;
     GdkRGBA *fillColorOver;
     GdkRGBA *fillColorPress;
@@ -633,7 +633,7 @@ void background_update_image(int index)
     cairo_fill_preserve(cr);
     if (index >= 1 && gradient_id >= 1) {
         GradientConfig *g = g_list_nth(gradients, (guint)gradient_id)->data;
-        gradient_draw(cr, g, w, h, TRUE);
+        gradient_draw(cr, g, w, h, true);
     }
     // Clip & draw complete mix
     cairo_pop_group_to_source (cr);
@@ -673,7 +673,7 @@ void background_force_update()
     background_update(NULL, NULL);
 }
 
-static gboolean background_updates_disabled = FALSE;
+static bool background_updates_disabled = false;
 void background_update(GtkWidget *widget, gpointer data)
 {
     if (background_updates_disabled)
@@ -698,15 +698,15 @@ void background_update(GtkWidget *widget, gpointer data)
     double fill_weight = gtk_spin_button_get_value(GTK_SPIN_BUTTON(background_fill_content_tint_weight));
     double border_weight = gtk_spin_button_get_value(GTK_SPIN_BUTTON(background_border_content_tint_weight));
 
-    gboolean sideTop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_top));
-    gboolean sideBottom = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_bottom));
-    gboolean sideLeft = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_left));
-    gboolean sideRight = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_right));
+    bool sideTop = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_top));
+    bool sideBottom = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_bottom));
+    bool sideLeft = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_left));
+    bool sideRight = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_border_sides_right));
 
-    gboolean roundTL = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_tleft));
-    gboolean roundTR = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_tright));
-    gboolean roundBL = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_bleft));
-    gboolean roundBR = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_bright));
+    bool roundTL = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_tleft));
+    bool roundTR = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_tright));
+    bool roundBL = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_bleft));
+    bool roundBR = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(background_corner_round_bright));
 
     GdkRGBA fillColor;
     GdkRGBA borderColor;
@@ -762,7 +762,7 @@ void current_background_changed(GtkWidget *widget, gpointer data)
     if (data)
         gtk_widget_set_sensitive(data, index > 0);
 
-    background_updates_disabled = TRUE;
+    background_updates_disabled = true;
 
     GtkTreePath *path;
     GtkTreeIter iter;
@@ -777,12 +777,12 @@ void current_background_changed(GtkWidget *widget, gpointer data)
     double fill_weight;
     double border_weight;
 
-    gboolean sideTop;
-    gboolean sideBottom;
-    gboolean sideLeft;
-    gboolean sideRight;
+    bool sideTop;
+    bool sideBottom;
+    bool sideLeft;
+    bool sideRight;
 
-    gboolean roundTL, roundTR, roundBL, roundBR;
+    bool roundTL, roundTR, roundBL, roundBR;
 
     GdkRGBA *fillColor;
     GdkRGBA *borderColor;
@@ -851,20 +851,20 @@ void current_background_changed(GtkWidget *widget, gpointer data)
     g_boxed_free(GDK_TYPE_RGBA, fillColorPress);
     g_boxed_free(GDK_TYPE_RGBA, borderColorPress);
 
-    background_updates_disabled = FALSE;
+    background_updates_disabled = false;
     background_update_image(index);
 }
 
 void background_update_for_gradient(int gradient_id_changed)
 {
-    gboolean deleted = gradient_id_changed >= get_model_length(GTK_TREE_MODEL(gradient_ids));
+    bool deleted = gradient_id_changed >= get_model_length(GTK_TREE_MODEL(gradient_ids));
     int current_bg_index = gtk_combo_box_get_active(GTK_COMBO_BOX(current_background));
     for (int index = 1;; index++) {
         GtkTreePath *path;
         GtkTreeIter iter;
 
         path = gtk_tree_path_new_from_indices(index, -1);
-        gboolean found = gtk_tree_model_get_iter(GTK_TREE_MODEL(backgrounds), &iter, path);
+        bool found = gtk_tree_model_get_iter(GTK_TREE_MODEL(backgrounds), &iter, path);
         gtk_tree_path_free(path);
 
         if (!found) {
@@ -878,13 +878,13 @@ void background_update_for_gradient(int gradient_id_changed)
                            bgColGradientIdOver, &gradient_id_over,
                            bgColGradientIdPress,&gradient_id_press,
                            -1);
-        gboolean changed = FALSE;
+        bool changed = false;
         if (gradient_id == gradient_id_changed && deleted)
-            gradient_id = -1, changed = TRUE;
+            gradient_id = -1, changed = true;
         if (gradient_id_over == gradient_id_changed && deleted)
-            gradient_id_over = -1, changed = TRUE;
+            gradient_id_over = -1, changed = true;
         if (gradient_id_press == gradient_id_changed && deleted)
-            gradient_id_press = -1, changed = TRUE;
+            gradient_id_press = -1, changed = true;
         if (changed) {
             gtk_list_store_set(GTK_LIST_STORE(backgrounds), &iter,
                                bgColGradientId,     gradient_id,

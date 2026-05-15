@@ -4,7 +4,7 @@
 #include <gtk/gtk.h>
 
 char *get_current_theme_path();
-gboolean config_is_manual(const char *path);
+bool config_is_manual(const char *path);
 void config_read_file(const char *path);
 void config_save_file(const char *path);
 

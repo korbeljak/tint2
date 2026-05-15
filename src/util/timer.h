@@ -19,9 +19,9 @@
 #define TIMER_H
 
 #include <glib.h>
+#include <stdbool.h>
 #include <time.h>
 #include <sys/time.h>
-#include "bool.h"
 
 extern bool timers_warnings;
 extern bool debug_timers;

@@ -10,22 +10,23 @@
 #define WINDOW_H
 
 #include <glib.h>
+#include <stdbool.h>
 #include <pango/pangocairo.h>
 #include <X11/Xlib.h>
 
 Window get_active_window();
 
-gboolean window_is_iconified(Window win);
-gboolean window_is_urgent(Window win);
-gboolean window_is_hidden(Window win);
-gboolean window_is_active(Window win);
-gboolean window_is_skip_taskbar(Window win);
+bool window_is_iconified(Window win);
+bool window_is_urgent(Window win);
+bool window_is_hidden(Window win);
+bool window_is_active(Window win);
+bool window_is_skip_taskbar(Window win);
 int get_window_desktop(Window win);
 int get_window_monitor(Window win);
 
 void activate_window(Window win);
 void close_window(Window win);
-gboolean get_window_coordinates(Window win, int *x, int *y, int *w, int *h);
+bool get_window_coordinates(Window win, int *x, int *y, int *w, int *h);
 void toggle_window_maximized(Window win);
 void toggle_window_shade(Window win);
 void change_window_desktop(Window win, int desktop);

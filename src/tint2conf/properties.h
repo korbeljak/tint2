@@ -163,7 +163,7 @@ extern IconThemeWrapper *icon_theme;
 extern GtkWidget *launcher_tooltip;
 extern GtkWidget *launcher_icon_theme_override;
 
-void load_desktop_file(const char *file, gboolean selected);
+void load_desktop_file(const char *file, bool selected);
 void set_current_icon_theme(const char *theme);
 gchar *get_current_icon_theme();
 

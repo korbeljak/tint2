@@ -54,13 +54,13 @@ typedef struct GlobalTaskbar {
     GList *gradient_name[TASKBAR_STATE_COUNT];
 } GlobalTaskbar;
 
-extern gboolean taskbar_enabled;
-extern gboolean taskbar_distribute_size;
-extern gboolean hide_task_diff_desktop;
-extern gboolean hide_inactive_tasks;
-extern gboolean hide_task_diff_monitor;
-extern gboolean hide_taskbar_if_empty;
-extern gboolean always_show_all_desktop_tasks;
+extern bool taskbar_enabled;
+extern bool taskbar_distribute_size;
+extern bool hide_task_diff_desktop;
+extern bool hide_inactive_tasks;
+extern bool hide_task_diff_monitor;
+extern bool hide_taskbar_if_empty;
+extern bool always_show_all_desktop_tasks;
 extern TaskbarSortMethod taskbar_sort_method;
 extern Alignment taskbar_alignment;
 
@@ -82,7 +82,7 @@ void cleanup_taskbar();
 void init_taskbar();
 void init_taskbar_panel(void *p);
 
-gboolean resize_taskbar(void *obj);
+bool resize_taskbar(void *obj);
 void taskbar_default_font_changed();
 void taskbar_start_thumbnail_timer(ThumbnailUpdateMode mode);
 
@@ -109,6 +109,6 @@ void sort_taskbar_for_win(Window win);
 
 void sort_tasks(Taskbar *taskbar);
 
-gboolean taskbar_is_under_mouse(void *obj, int x, int y);
+bool taskbar_is_under_mouse(void *obj, int x, int y);
 
 #endif

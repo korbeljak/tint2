@@ -35,8 +35,8 @@ void init_cache(Cache *cache)
     if (cache->_table)
         free_cache(cache);
     cache->_table = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-    cache->dirty = FALSE;
-    cache->loaded = FALSE;
+    cache->dirty = false;
+    cache->loaded = false;
 }
 
 void free_cache(Cache *cache)
@@ -44,15 +44,15 @@ void free_cache(Cache *cache)
     if (cache->_table)
         g_hash_table_destroy(cache->_table);
     cache->_table = NULL;
-    cache->dirty = FALSE;
-    cache->loaded = FALSE;
+    cache->dirty = false;
+    cache->loaded = false;
 }
 
 void load_cache(Cache *cache, const gchar *cache_path)
 {
     init_cache(cache);
 
-    cache->loaded = TRUE;
+    cache->loaded = true;
 
     int fd = open(cache_path, O_RDONLY);
     if (fd == -1)
@@ -122,7 +122,7 @@ void save_cache(Cache *cache, const gchar *cache_path)
     }
     g_hash_table_foreach(cache->_table, write_cache_line, f);
     fclose(f);
-    cache->dirty = FALSE;
+    cache->dirty = false;
 
 unlock:
     flock(fd, LOCK_UN);
@@ -148,5 +148,5 @@ void add_to_cache(Cache *cache, const gchar *key, const gchar *value)
         return;
 
     g_hash_table_insert(cache->_table, strdup(key), strdup(value));
-    cache->dirty = TRUE;
+    cache->dirty = true;
 }

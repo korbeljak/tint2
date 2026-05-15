@@ -20,12 +20,12 @@ GtkWidget *create_gradient_combo()
 {
     GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(gradient_ids));
     GtkCellRenderer *renderer = gtk_cell_renderer_pixbuf_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, false);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "pixbuf", grColPixbuf, NULL);
     renderer = gtk_cell_renderer_text_new();
     g_object_set(renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
     g_object_set(renderer, "wrap-width", 300, NULL);
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, false);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "text", grColText, NULL);
     return combo;
 }
@@ -41,16 +41,16 @@ void init_gradient_page (GtkWidget *parent)
     int row, col;
     // GtkTooltips *tooltips = gtk_tooltips_new();
 
-    table = gtk_table_new(1, 4, FALSE);
+    table = gtk_table_new(1, 4, false);
     gtk_widget_show(table);
-    gtk_box_pack_start(GTK_BOX(parent), table, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(parent), table, false, false, 0);
     gtk_table_set_row_spacings(GTK_TABLE(table), ROW_SPACING);
     gtk_table_set_col_spacings(GTK_TABLE(table), COL_SPACING);
 
     row = 0, col = 0;
     label = gtk_label_new(_("<b>Gradient</b>"));
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
-    gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
+    gtk_label_set_use_markup(GTK_LABEL(label), true);
     gtk_widget_show(label);
     gtk_table_attach(GTK_TABLE(table), label, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -72,9 +72,9 @@ void init_gradient_page (GtkWidget *parent)
     gtk_table_attach(GTK_TABLE(table), button, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
 
-    table = gtk_table_new(3, 4, FALSE);
+    table = gtk_table_new(3, 4, false);
     gtk_widget_show(table);
-    gtk_box_pack_start(GTK_BOX(parent), table, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(parent), table, false, false, 0);
     gtk_table_set_row_spacings(GTK_TABLE(table), ROW_SPACING);
     gtk_table_set_col_spacings(GTK_TABLE(table), COL_SPACING);
 
@@ -102,7 +102,7 @@ void init_gradient_page (GtkWidget *parent)
     col++;
 
     gradient_start_color = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(gradient_start_color), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(gradient_start_color), true);
     gtk_widget_show(gradient_start_color);
     gtk_table_attach(GTK_TABLE(table), gradient_start_color, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -115,23 +115,23 @@ void init_gradient_page (GtkWidget *parent)
     col++;
 
     gradient_end_color = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(gradient_end_color), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(gradient_end_color), true);
     gtk_widget_show(gradient_end_color);
     gtk_table_attach(GTK_TABLE(table), gradient_end_color, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
 
     change_paragraph(parent);
 
-    table = gtk_table_new(1, 4, FALSE);
+    table = gtk_table_new(1, 4, false);
     gtk_widget_show(table);
-    gtk_box_pack_start(GTK_BOX(parent), table, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(parent), table, false, false, 0);
     gtk_table_set_row_spacings(GTK_TABLE(table), ROW_SPACING);
     gtk_table_set_col_spacings(GTK_TABLE(table), COL_SPACING);
 
     row = 0, col = 0;
     label = gtk_label_new(_("<b>Color stop</b>"));
     gtk_misc_set_alignment(GTK_MISC(label), 0, 0);
-    gtk_label_set_use_markup(GTK_LABEL(label), TRUE);
+    gtk_label_set_use_markup(GTK_LABEL(label), true);
     gtk_widget_show(label);
     gtk_table_attach(GTK_TABLE(table), label, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -153,9 +153,9 @@ void init_gradient_page (GtkWidget *parent)
     gtk_table_attach(GTK_TABLE(table), button, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
 
-    table = gtk_table_new(3, 4, FALSE);
+    table = gtk_table_new(3, 4, false);
     gtk_widget_show(table);
-    gtk_box_pack_start(GTK_BOX(parent), table, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(parent), table, false, false, 0);
     gtk_table_set_row_spacings(GTK_TABLE(table), ROW_SPACING);
     gtk_table_set_col_spacings(GTK_TABLE(table), COL_SPACING);
 
@@ -167,7 +167,7 @@ void init_gradient_page (GtkWidget *parent)
     col++;
 
     gradient_stop_color = gtk_color_button_new();
-    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(gradient_stop_color), TRUE);
+    gtk_color_chooser_set_use_alpha(GTK_COLOR_CHOOSER(gradient_stop_color), true);
     gtk_widget_show(gradient_stop_color);
     gtk_table_attach(GTK_TABLE(table), gradient_stop_color, col, col + 1, row, row + 1, GTK_FILL, 0, 0, 0);
     col++;
@@ -279,7 +279,7 @@ void gradient_delete(GtkWidget *widget, gpointer data)
     gtk_combo_box_set_active(GTK_COMBO_BOX(current_gradient), index);
 }
 
-void gradient_draw(cairo_t *c, GradientConfig *g, int w, int h, gboolean preserve)
+void gradient_draw(cairo_t *c, GradientConfig *g, int w, int h, bool preserve)
 {
     cairo_pattern_t *gpat;
     if (g->type == GRADIENT_CONFIG_VERTICAL)
@@ -331,7 +331,7 @@ void gradient_update_image(int index)
     cairo_fill(cr);
 
     cairo_rectangle(cr, 0, 0, w, h);
-    gradient_draw(cr, g, w, h, FALSE);
+    gradient_draw(cr, g, w, h, false);
 
     GdkPixbuf *pixbuf = gdk_pixbuf_get_from_surface(pixmap, 0, 0, w, h);
     cairo_surface_destroy(pixmap);
@@ -353,7 +353,7 @@ void gradient_force_update()
     gradient_update(NULL, NULL);
 }
 
-static gboolean gradient_updates_disabled = FALSE;
+static bool gradient_updates_disabled = false;
 void gradient_update(GtkWidget *widget, gpointer data)
 {
     if (gradient_updates_disabled)
@@ -399,7 +399,7 @@ void current_gradient_changed(GtkWidget *widget, gpointer data)
     gtk_widget_set_sensitive(gradient_stop_color, index > 0);
     gtk_widget_set_sensitive(gradient_stop_offset, index > 0);
 
-    gradient_updates_disabled = TRUE;
+    gradient_updates_disabled = true;
 
     GradientConfig *g = g_list_nth(gradients, (guint)index)->data;
 
@@ -429,7 +429,7 @@ void current_gradient_changed(GtkWidget *widget, gpointer data)
     else
         gtk_combo_box_set_active(GTK_COMBO_BOX(current_gradient_stop), stop_index - 1);
 
-    gradient_updates_disabled = FALSE;
+    gradient_updates_disabled = false;
     gradient_update_image(index);
 }
 
@@ -439,7 +439,7 @@ GtkWidget *create_gradient_stop_combo()
 {
     GtkWidget *combo = gtk_combo_box_new_with_model(GTK_TREE_MODEL(gradient_stop_ids));
     GtkCellRenderer *renderer = gtk_cell_renderer_pixbuf_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, false);
     gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(combo), renderer, "pixbuf", grStopColPixbuf, NULL);
     return combo;
 }
@@ -548,7 +548,7 @@ void current_gradient_stop_changed(GtkWidget *widget, gpointer data)
 
     GradientConfigColorStop *stop = g_list_nth(g->extra_color_stops, (guint)index)->data;
 
-    gradient_updates_disabled = TRUE;
+    gradient_updates_disabled = true;
 
     GdkRGBA color;
 
@@ -557,7 +557,7 @@ void current_gradient_stop_changed(GtkWidget *widget, gpointer data)
 
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(gradient_stop_offset), stop->offset * 100);
 
-    gradient_updates_disabled = FALSE;
+    gradient_updates_disabled = false;
 }
 
 void gradient_stop_update(GtkWidget *widget, gpointer data)

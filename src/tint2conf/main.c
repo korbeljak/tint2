@@ -60,29 +60,29 @@ gchar *get_etc_config_path()
     return strdup_static(path, "/dev/null");
 }
 
-gboolean startswith(const char *str, const char *prefix)
+bool startswith(const char *str, const char *prefix)
 {
     return strstr(str, prefix) == str;
 }
 
-gboolean endswith(const char *str, const char *suffix)
+bool endswith(const char *str, const char *suffix)
 {
     size_t  slen = strlen(str),
             suf_len = strlen(suffix);
     return slen >= suf_len && g_str_equal(str + slen - suf_len, suffix);
 }
 
-gboolean theme_is_editable(const char *filepath)
-// Returns TRUE if the theme file is in ~/.config.
+bool theme_is_editable(const char *filepath)
+// Returns true if the theme file is in ~/.config.
 {
     return access(filepath, W_OK) == 0;
 }
 
-gboolean theme_is_default(const char *filepath)
-// Returns TRUE if the theme file is ~/.config/tint2/tint2rc.
+bool theme_is_default(const char *filepath)
+// Returns true if the theme file is ~/.config/tint2/tint2rc.
 {
     gchar *default_path = get_home_config_path();
-    gboolean result = g_str_equal(default_path, filepath);
+    bool result = g_str_equal(default_path, filepath);
     g_free(default_path);
     return result;
 }
@@ -130,7 +130,7 @@ void import_with_overwrite(const char *filepath, const char *newpath)
 // Copies a theme file from filepath to newpath.
 // Takes care of updating the theme list in the GUI.
 {
-    gboolean theme_existed = g_file_test(newpath, G_FILE_TEST_EXISTS);
+    bool theme_existed = g_file_test(newpath, G_FILE_TEST_EXISTS);
     if (theme_existed)
         make_backup(newpath);
 
@@ -155,8 +155,8 @@ static void menuReset();
 static gboolean edit_theme(gpointer ignored);
 static void make_selected_theme_default();
 static void menuAbout();
-static gboolean view_onPopupMenu(GtkWidget *treeview, gpointer userdata);
-static gboolean view_onButtonPressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
+static bool view_onPopupMenu(GtkWidget *treeview, gpointer userdata);
+static bool view_onButtonPressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
 static void viewRowActivated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data);
 
 static void select_first_theme();
@@ -254,8 +254,8 @@ int main(int argc, char **argv)
         gtk_label_set_text_with_mnemonic (GTK_LABEL (label), text);                      \
         gtk_label_set_xalign (GTK_LABEL (label), 0.0);                                   \
         box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);                               \
-        gtk_box_pack_start (GTK_BOX (box), icon,  FALSE, TRUE, 0);                       \
-        gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 0);                        \
+        gtk_box_pack_start (GTK_BOX (box), icon,  false, true, 0);                       \
+        gtk_box_pack_start (GTK_BOX (box), label, true, true, 0);                        \
         gtk_container_add (GTK_CONTAINER (menu_item), box);                              \
         gtk_menu_shell_append (GTK_MENU_SHELL (menu), menu_item);                        \
     } while (0)
@@ -322,8 +322,8 @@ int main(int argc, char **argv)
     #undef add_menu_item
     #undef add_tool_button
 
-    gtk_box_pack_start (GTK_BOX(vBox), main_menu, FALSE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX(vBox), toolbar,   FALSE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX(vBox), main_menu, false, true, 0);
+    gtk_box_pack_start (GTK_BOX(vBox), toolbar,   false, true, 0);
 
     GtkWidget *box, *label;
 
@@ -335,13 +335,13 @@ int main(int argc, char **argv)
 
     box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_box_set_spacing (GTK_BOX(box), 8);
-    gtk_box_pack_start (GTK_BOX(box), label, FALSE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX(box), tint_cmd, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX(vBox), box, FALSE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX(box), label, false, true, 0);
+    gtk_box_pack_start (GTK_BOX(box), tint_cmd, true, true, 0);
+    gtk_box_pack_start (GTK_BOX(vBox), box, false, true, 0);
 
     scrollbar = gtk_scrolled_window_new(NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollbar), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_box_pack_start(GTK_BOX(vBox), scrollbar, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(vBox), scrollbar, true, true, 0);
 
     // define theme view
     create_view();
@@ -417,7 +417,7 @@ static void menuImportFile()
                                                     GTK_RESPONSE_ACCEPT,
                                                     NULL);
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-    gtk_file_chooser_set_select_multiple(chooser, TRUE);
+    gtk_file_chooser_set_select_multiple(chooser, true);
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_ACCEPT) {
         gtk_widget_destroy(dialog);
@@ -483,7 +483,7 @@ static void menuSaveAs()
                                                     GTK_RESPONSE_ACCEPT,
                                                     NULL);
     GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-    gtk_file_chooser_set_do_overwrite_confirmation(chooser, FALSE);
+    gtk_file_chooser_set_do_overwrite_confirmation(chooser, false);
     gchar *config_dir = g_build_filename(g_get_home_dir(), ".config", "tint2", NULL);
     gtk_file_chooser_set_current_folder(chooser, config_dir);
     g_free(config_dir);
@@ -593,7 +593,7 @@ static void show_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer
     gtk_menu_popup_at_pointer(GTK_MENU(view_menu), (GdkEvent *)event);
 }
 
-static gboolean view_onButtonPressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
+static bool view_onButtonPressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
     // single click with the right mouse button?
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
@@ -615,13 +615,13 @@ static gboolean view_onButtonPressed(GtkWidget *treeview, GdkEventButton *event,
         }
         show_popup_menu(treeview, event, userdata);
     }
-    return FALSE;
+    return false;
 }
 
-static gboolean view_onPopupMenu(GtkWidget *treeview, gpointer userdata)
+static bool view_onPopupMenu(GtkWidget *treeview, gpointer userdata)
 {
     show_popup_menu(treeview, NULL, userdata);
-    return TRUE;
+    return true;
 }
 
 static void theme_selection_changed(GtkWidget *treeview, gpointer userdata)
@@ -632,26 +632,26 @@ static void theme_selection_changed(GtkWidget *treeview, gpointer userdata)
     if (gtk_tree_selection_get_selected(GTK_TREE_SELECTION(sel), &model, &iter)) {
         gchar *filepath;
         gtk_tree_model_get(model, &iter, COL_THEME_FILE, &filepath, -1);
-        gboolean isdefault = theme_is_default(filepath);
+        bool isdefault = theme_is_default(filepath);
         gchar *text = isdefault ? strdup_printf( NULL, "tint2") : strdup_printf( NULL, "tint2 -c %s", filepath);
         gtk_entry_set_text(GTK_ENTRY(tint_cmd), text);
         free( text);
-        gboolean editable = theme_is_editable(filepath);
+        bool editable = theme_is_editable(filepath);
         g_free(filepath);
-        g_simple_action_set_enabled(ThemeSaveAs,        TRUE);
+        g_simple_action_set_enabled(ThemeSaveAs,        true);
         g_simple_action_set_enabled(ThemeDelete,        editable);
         g_simple_action_set_enabled(ThemeReset,         editable);
         g_simple_action_set_enabled(ThemeMakeDefault,   !isdefault);
-        g_simple_action_set_enabled(ThemeEdit,          TRUE);
-        g_simple_action_set_enabled(ThemeRefresh,       TRUE);
+        g_simple_action_set_enabled(ThemeEdit,          true);
+        g_simple_action_set_enabled(ThemeRefresh,       true);
     } else {
         gtk_entry_set_text(GTK_ENTRY(tint_cmd), "");
-        g_simple_action_set_enabled(ThemeSaveAs,        FALSE);
-        g_simple_action_set_enabled(ThemeDelete,        FALSE);
-        g_simple_action_set_enabled(ThemeReset,         FALSE);
-        g_simple_action_set_enabled(ThemeMakeDefault,   FALSE);
-        g_simple_action_set_enabled(ThemeEdit,          FALSE);
-        g_simple_action_set_enabled(ThemeRefresh,       FALSE);
+        g_simple_action_set_enabled(ThemeSaveAs,        false);
+        g_simple_action_set_enabled(ThemeDelete,        false);
+        g_simple_action_set_enabled(ThemeReset,         false);
+        g_simple_action_set_enabled(ThemeMakeDefault,   false);
+        g_simple_action_set_enabled(ThemeEdit,          false);
+        g_simple_action_set_enabled(ThemeRefresh,       false);
     }
 }
 
@@ -662,7 +662,7 @@ void select_first_theme()
     if (gtk_tree_model_get_iter_first(model, &iter)) {
         GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
         gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(g_theme_view)), &iter);
-        gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(g_theme_view), path, NULL, FALSE, 0, 0);
+        gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(g_theme_view), path, NULL, false, 0, 0);
         gtk_tree_path_free(path);
     }
     theme_selection_changed(NULL, NULL);
@@ -673,14 +673,14 @@ void select_theme(const char *given_path)
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
     GtkTreeIter iter;
 
-    gboolean have_iter = gtk_tree_model_get_iter_first(model, &iter);
+    bool have_iter = gtk_tree_model_get_iter_first(model, &iter);
     while (have_iter) {
         gchar *filepath;
         gtk_tree_model_get(model, &iter, COL_THEME_FILE, &filepath, -1);
         if (g_str_equal(filepath, given_path)) {
             GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
             gtk_tree_selection_select_iter(gtk_tree_view_get_selection(GTK_TREE_VIEW(g_theme_view)), &iter);
-            gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(g_theme_view), path, NULL, FALSE, 0, 0);
+            gtk_tree_view_scroll_to_cell(GTK_TREE_VIEW(g_theme_view), path, NULL, false, 0, 0);
             gtk_tree_path_free(path);
             g_free(filepath);
             break;
@@ -696,9 +696,9 @@ static gboolean edit_theme(gpointer ignored)
 {
     gchar *filepath = get_selected_theme_or_warn();
     if (!filepath)
-        return FALSE;
+        return false;
 
-    gboolean editable = theme_is_editable(filepath);
+    bool editable = theme_is_editable(filepath);
     if (!editable) {
         gchar *newpath = import_no_overwrite(filepath);
         g_free(filepath);
@@ -715,7 +715,7 @@ static gboolean edit_theme(gpointer ignored)
 
     destroy_please_wait();
 
-    return FALSE;
+    return false;
 }
 
 static void make_selected_theme_default()
@@ -787,22 +787,22 @@ static int theme_file_valid (const char *file_name)
             (endswith(file_name, "tint2rc") || endswith(file_name, ".conf"));
 }
 
-static gboolean load_user_themes()
+static bool load_user_themes()
 {
     // Load configs from home directory
     gchar *tint2_config_dir = strdup_printf( NULL, "%s/tint2", (fetch_user_config_dir(), user_config_dir));
     GDir *dir = g_dir_open(tint2_config_dir, 0, NULL);
     if (dir == NULL) {
         free( tint2_config_dir);
-        return FALSE;
+        return false;
     }
-    gboolean found_theme = FALSE;
+    bool found_theme = false;
 
     const gchar *file_name;
     while ((file_name = g_dir_read_name(dir))) {
         if (theme_file_valid (file_name))
         {
-            found_theme = TRUE;
+            found_theme = true;
             gchar *path = strdup_printf( NULL, "%s/%s", tint2_config_dir, file_name);
             theme_list_append(path);
             free( path);
@@ -814,9 +814,9 @@ static gboolean load_user_themes()
     return found_theme;
 }
 
-static gboolean load_themes_from_dirs(const gchar *const *dirs)
+static bool load_themes_from_dirs(const gchar *const *dirs)
 {
-    gboolean found_theme = FALSE;
+    bool found_theme = false;
     for (int i = 0; dirs[i]; i++) {
         gchar *path_tint2 = strdup_printf( NULL, "%s/tint2", dirs[i]);
         GDir *dir = g_dir_open(path_tint2, 0, NULL);
@@ -825,7 +825,7 @@ static gboolean load_themes_from_dirs(const gchar *const *dirs)
             while ((file_name = g_dir_read_name(dir))) {
                 if (theme_file_valid (file_name))
                 {
-                    found_theme = TRUE;
+                    found_theme = true;
                     gchar *path = strdup_printf( NULL, "%s/%s", path_tint2, file_name);
                     theme_list_append(path);
                     free( path);
@@ -838,13 +838,13 @@ static gboolean load_themes_from_dirs(const gchar *const *dirs)
     return found_theme;
 }
 
-static gboolean load_system_themes()
+static bool load_system_themes()
 {
-    gboolean found_theme = FALSE;
+    bool found_theme = false;
     if (load_themes_from_dirs(g_get_system_config_dirs()))
-        found_theme = TRUE;
+        found_theme = true;
     if (load_themes_from_dirs(g_get_system_data_dirs()))
-        found_theme = TRUE;
+        found_theme = true;
     return found_theme;
 }
 
@@ -874,18 +874,18 @@ static void load_all_themes()
     gtk_list_store_clear(GTK_LIST_STORE(theme_list_store));
     theme_selection_changed(NULL, NULL);
 
-    gboolean found_themes = FALSE;
+    bool found_themes = false;
     if (load_user_themes())
-        found_themes = TRUE;
+        found_themes = true;
     if (load_system_themes())
-        found_themes = TRUE;
+        found_themes = true;
 
     if (found_themes) {
         select_first_theme();
 
         GtkTreeIter iter;
         GtkTreeModel *model;
-        gboolean have_iter;
+        bool have_iter;
 
         model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
         have_iter = gtk_tree_model_get_iter_first(model, &iter);
@@ -905,23 +905,23 @@ static void reload_all_themes()
     gtk_list_store_clear(GTK_LIST_STORE(theme_list_store));
     theme_selection_changed(NULL, NULL);
 
-    gboolean found_themes = FALSE;
+    bool found_themes = false;
     if (load_user_themes())
-        found_themes = TRUE;
+        found_themes = true;
     if (load_system_themes())
-        found_themes = TRUE;
+        found_themes = true;
 
     if (found_themes) {
         select_first_theme();
 
         GtkTreeIter iter;
         GtkTreeModel *model;
-        gboolean have_iter;
+        bool have_iter;
 
         model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
         have_iter = gtk_tree_model_get_iter_first(model, &iter);
         while (have_iter) {
-            gtk_list_store_set(theme_list_store, &iter, COL_SNAPSHOT, NULL, COL_FORCE_REFRESH, TRUE, -1);
+            gtk_list_store_set(theme_list_store, &iter, COL_SNAPSHOT, NULL, COL_FORCE_REFRESH, true, -1);
             have_iter = gtk_tree_model_iter_next(model, &iter);
         }
 
@@ -933,7 +933,7 @@ static void load_specific_themes(char **paths, int count)
 {
     ensure_default_theme_exists();
 
-    gboolean found_themes = FALSE;
+    bool found_themes = false;
     while (count > 0) {
         // Load configs
         const char *file_name = paths[0];
@@ -942,7 +942,7 @@ static void load_specific_themes(char **paths, int count)
             theme_list_append(file_name);
             if (!found_themes) {
                 select_theme(file_name);
-                found_themes = TRUE;
+                found_themes = true;
             }
         }
     }
@@ -950,7 +950,7 @@ static void load_specific_themes(char **paths, int count)
     if (found_themes) {
         GtkTreeIter iter;
         GtkTreeModel *model;
-        gboolean have_iter;
+        bool have_iter;
 
         model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
         have_iter = gtk_tree_model_get_iter_first(model, &iter);
@@ -979,7 +979,7 @@ void refresh_theme(const char *given_path)
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
     GtkTreeIter iter;
 
-    gboolean have_iter = gtk_tree_model_get_iter_first(model, &iter);
+    bool have_iter = gtk_tree_model_get_iter_first(model, &iter);
     while (have_iter) {
         gchar *filepath;
         gtk_tree_model_get(model, &iter, COL_THEME_FILE, &filepath, -1);
@@ -999,7 +999,7 @@ void remove_theme(const char *given_path)
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(g_theme_view));
     GtkTreeIter iter;
 
-    gboolean have_iter = gtk_tree_model_get_iter_first(model, &iter);
+    bool have_iter = gtk_tree_model_get_iter_first(model, &iter);
     while (have_iter) {
         gchar *filepath;
         gtk_tree_model_get(model, &iter, COL_THEME_FILE, &filepath, -1);

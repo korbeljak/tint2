@@ -67,7 +67,7 @@ void toggle_window_maximized(Window win)
     send_event32(win, server.atom [_NET_WM_STATE], 2, server.atom [_NET_WM_STATE_MAXIMIZED_HORZ], 0);
 }
 
-gboolean window_is_hidden(Window win)
+bool window_is_hidden(Window win)
 {
     Window window;
     int count;
@@ -77,14 +77,14 @@ gboolean window_is_hidden(Window win)
     {
         if (at[i] == server.atom [_NET_WM_STATE_SKIP_TASKBAR]) {
             XFree(at);
-            return TRUE;
+            return true;
         }
         // do not add transient_for windows if the transient window is already in the taskbar
         window = win;
         while (XGetTransientForHint(server.display, window, &window))
             if (get_task_buttons(window)) {
                 XFree(at);
-                return TRUE;
+                return true;
             }
     }
     XFree(at);
@@ -96,18 +96,18 @@ gboolean window_is_hidden(Window win)
             at[i] == server.atom [_NET_WM_WINDOW_TYPE_SPLASH])
         {
             XFree(at);
-            return TRUE;
+            return true;
         }
     XFree(at);
 
     for (int i = 0; i < num_panels; i++)
         if (panels[i].main_win == win)
-            return TRUE;
+            return true;
 
     // specification
     // Windows with neither _NET_WM_WINDOW_TYPE nor WM_TRANSIENT_FOR set
     // MUST be taken as top-level window.
-    return FALSE;
+    return false;
 }
 
 int get_window_desktop(Window win)
@@ -203,20 +203,20 @@ int get_window_monitor(Window win)
     return best_match;
 }
 
-gboolean get_window_coordinates(Window win, int *x, int *y, int *w, int *h)
+bool get_window_coordinates(Window win, int *x, int *y, int *w, int *h)
 {
     int dummy_int;
     unsigned ww, wh, bw, bh;
     Window src;
     if (!XTranslateCoordinates(server.display, win, server.root_win, 0, 0, x, y, &src) ||
         !XGetGeometry(server.display, win, &src, &dummy_int, &dummy_int, &ww, &wh, &bw, &bh))
-        return FALSE;
+        return false;
     *w = ww + bw;
     *h = wh + bw;
-    return TRUE;
+    return true;
 }
 
-gboolean window_is_iconified(Window win)
+bool window_is_iconified(Window win)
 {
     // EWMH specification : minimization of windows use _NET_WM_STATE_HIDDEN.
     // WM_STATE is not accurate for shaded window and in multi_desktop mode.
@@ -225,13 +225,13 @@ gboolean window_is_iconified(Window win)
     for (int i = 0; i < count; i++)
         if (at[i] == server.atom [_NET_WM_STATE_HIDDEN]) {
             XFree(at);
-            return TRUE;
+            return true;
         }
     XFree(at);
-    return FALSE;
+    return false;
 }
 
-gboolean window_is_urgent(Window win)
+bool window_is_urgent(Window win)
 {
     int count;
 
@@ -239,13 +239,13 @@ gboolean window_is_urgent(Window win)
     for (int i = 0; i < count; i++)
         if (at[i] == server.atom [_NET_WM_STATE_DEMANDS_ATTENTION]) {
             XFree(at);
-            return TRUE;
+            return true;
         }
     XFree(at);
-    return FALSE;
+    return false;
 }
 
-gboolean window_is_skip_taskbar(Window win)
+bool window_is_skip_taskbar(Window win)
 {
     int count;
 
@@ -253,11 +253,11 @@ gboolean window_is_skip_taskbar(Window win)
     for (int i = 0; i < count; i++) {
         if (at[i] == server.atom [_NET_WM_STATE_SKIP_TASKBAR]) {
             XFree(at);
-            return TRUE;
+            return true;
         }
     }
     XFree(at);
-    return FALSE;
+    return false;
 }
 
 Window get_active_window()
@@ -265,7 +265,7 @@ Window get_active_window()
     return get_property32(server.root_win, server.atom [_NET_ACTIVE_WINDOW], XA_WINDOW);
 }
 
-gboolean window_is_active(Window win)
+bool window_is_active(Window win)
 {
     return (win == get_property32(server.root_win, server.atom [_NET_ACTIVE_WINDOW], XA_WINDOW));
 }
@@ -392,7 +392,7 @@ void smooth_thumbnail(cairo_surface_t *image_surface)
 #define GetPixel(ximg, x, y) ((u_int32_t *)&(ximg->data[y * ximg->bytes_per_line]))[x]
 //#define GetPixel XGetPixel
 
-cairo_surface_t *get_window_thumbnail_ximage(Window win, size_t size, gboolean use_shm)
+cairo_surface_t *get_window_thumbnail_ximage(Window win, size_t size, bool use_shm)
 {
     cairo_surface_t *result = NULL;
     XWindowAttributes wa;
@@ -589,22 +589,22 @@ e1: if (ximg)
 e0: return result;
 }
 
-gboolean cairo_surface_is_blank(cairo_surface_t *image_surface)
+bool cairo_surface_is_blank(cairo_surface_t *image_surface)
 {
     uint32_t *pixels = (uint32_t *)cairo_image_surface_get_data(image_surface);
     int size = cairo_image_surface_get_width(image_surface) * cairo_image_surface_get_height(image_surface);
     for (int i = 0; i < size; i++)
         if (pixels[i] & 0xffFFff)
-            return FALSE;
-    return TRUE;
+            return false;
+    return true;
 }
 
-gboolean thumb_use_shm = FALSE;
+bool thumb_use_shm = false;
 
 cairo_surface_t *get_window_thumbnail(Window win, int size)
 {
     cairo_surface_t *image_surface = NULL;
-    for (int use_shm = thumb_use_shm && server.has_shm && server.composite_manager; ; use_shm = FALSE)
+    for (int use_shm = thumb_use_shm && server.has_shm && server.composite_manager; ; use_shm = false)
     {
         image_surface = get_window_thumbnail_ximage(win, (size_t)size, use_shm);
         if (image_surface && cairo_surface_is_blank(image_surface))

@@ -80,13 +80,13 @@ static FILE *open_test_log(const char *test_name)
     return log;
 }
 
-static Status run_test_parent(TestListItem *item, pid_t child)
+static bool run_test_parent(TestListItem *item, pid_t child)
 {
     FILE *log = open_test_log(item->name);
     if (child == -1) {
         fprintf(log, "\n" "Test failed, fork failed\n");
         fclose(log);
-        return FAILURE;
+        return false;
     }
 
     int child_status;
@@ -94,32 +94,32 @@ static Status run_test_parent(TestListItem *item, pid_t child)
     if (ret_pid != child) {
         fprintf(log, "\n" "Test failed, waitpid failed\n");
         fclose(log);
-        return FAILURE;
+        return false;
     }
     if (WIFEXITED(child_status)) {
         int exit_status = WEXITSTATUS(child_status);
         if (exit_status == EXIT_SUCCESS) {
             fprintf(log, "\n" "Test succeeded.\n");
             fclose(log);
-            return SUCCESS;
+            return true;
         } else {
             fprintf(log, "\n" "Test failed, exit status: %d.\n", exit_status);
             fclose(log);
-            return FAILURE;
+            return false;
         }
     } else if (WIFSIGNALED(child_status)) {
         int signal = WTERMSIG(child_status);
         fprintf(log, "\n" "Test failed, child killed by signal: %d.\n", signal);
         fclose(log);
-        return FAILURE;
+        return false;
     } else {
         fprintf(log, "\n" "Test failed, waitpid failed.\n");
         fclose(log);
-        return FAILURE;
+        return false;
     }
 }
 
-static Status run_test(TestListItem *item)
+static bool run_test(TestListItem *item)
 {
     pid_t pid = fork();
     if (pid == 0)
@@ -134,10 +134,10 @@ void run_all_tests(bool verbose)
     size_t count = 0, succeeded = 0, failed = 0;
     for (GList *l = all_tests; l; l = l->next) {
         TestListItem *item = l->data;
-        Status status = run_test(item);
+        bool status = run_test(item);
         count++;
         fprintf(stdout, BLUE "tint2: Test " YELLOW "%s" BLUE ": ", item->name);
-        if (status == SUCCESS) {
+        if (status == true) {
             fprintf(stdout, GREEN "succeeded" RESET "\n");
             succeeded++;
         } else {

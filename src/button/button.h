@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <sys/time.h>
+#include <stdbool.h>
 #include <pango/pangocairo.h>
 
 #include "area.h"
@@ -21,9 +22,9 @@ typedef struct ButtonBackend {
     char *icon_name;
     char *text;
     char *tooltip;
-    gboolean centered;
+    bool centered;
     int max_icon_size;
-    gboolean has_font;
+    bool has_font;
     PangoFontDescription *font_desc;
     Color font_color;
     char *lclick_command;
@@ -106,7 +107,7 @@ void cleanup_button();
 void draw_button(void *obj, cairo_t *c);
 // Called on draw, obj = pointer to the front-end Button item.
 
-gboolean resize_button(void *obj);
+bool resize_button(void *obj);
 // Called on resize, obj = pointer to the front-end Button item.
 // Returns 1 if the new size is different than the previous size.
 

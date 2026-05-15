@@ -9,7 +9,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <glib.h>
+#include <stdbool.h>
 
 extern char *config_path;
 extern char *snapshot_path;
@@ -20,6 +20,6 @@ void default_config();
 void cleanup_config();
 // freed memory
 
-gboolean config_read();
+bool config_read();
 
 #endif
