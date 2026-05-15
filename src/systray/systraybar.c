@@ -398,7 +398,7 @@ void on_change_systray(void *obj)
                             pTrayWin->x,     pTrayWin->y,
                             pTrayWin->width, pTrayWin->height);
                 }
-                
+
                 XMoveResizeWindow(server.display,
                                   pTrayWin->parent,
                                   pTrayWin->x,
@@ -438,7 +438,7 @@ void on_change_systray(void *obj)
             }
         }
     }
-    while (!reorganized);
+    while (reorganized);
 
     refresh_systray = true;
 }
