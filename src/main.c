@@ -265,10 +265,16 @@ void handle_event_property_notify(XEvent *e)
                 // xfce4 sends _NET_WM_STATE after minimized to tray, so we need to check if window is mapped
                 // if it is mapped and not set as skip_taskbar, we must add it to our task list
                 XWindowAttributes wa;
-                XGetWindowAttributes(server.display, win, &wa);
-                if (wa.map_state == IsViewable && !window_is_skip_taskbar(win))
-                    if ((task = add_task(win)))
-                        schedule_panel_redraw();
+                if (XGetWindowAttributes(server.display, win, &wa) != 0)
+                {
+                    if (wa.map_state == IsViewable && !window_is_skip_taskbar(win))
+                    {
+                        if ((task = add_task(win)))
+                        {
+                            schedule_panel_redraw();
+                        }
+                    }
+                }
             }
             return;
         }

@@ -314,21 +314,16 @@ void on_change_systray(void *obj)
         posy = systray.area.posy + top_border_width( & systray.area) + systray.area.paddingx * panel->scale;
     }
 
-    TrayWindow* pTrayWin;
-    GSList* pList = systray.list_icons;
-
     bool reorganized;
     do
     {
         reorganized = false;
+        TrayWindow* pTrayWin;
+        GSList* pList = systray.list_icons;
+        
         for (int i = 1; pList != NULL; pList = pList->next, i++)
         {
             pTrayWin = pList->data;
-            if (pTrayWin == NULL)
-            {
-                continue;
-            }
-
             pTrayWin->y = posy;
             pTrayWin->x = posx;
             pTrayWin->width =

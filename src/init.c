@@ -246,7 +246,7 @@ void load_default_task_icon()
                                                      default_icon_data);
 }
 
-void init_post_config()
+void init_post_config(void)
 {
     server_init_visual();
     server_init_xdamage();
@@ -261,7 +261,7 @@ void init_post_config()
     XSync(server.display, False);
 }
 
-void init_X11_pre_config()
+void init_X11_pre_config(void)
 {
     server.display = XOpenDisplay(NULL);
     if (!server.display) {
